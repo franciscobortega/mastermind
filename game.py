@@ -1,7 +1,12 @@
-import random
+from random import randint
 
 def generate_code():
-    return [1,2,3,4]
+    code = []
+
+    for _ in range(4):
+        code.append(randint(0,7))
+
+    return code 
 
 def check_guess(secret_code, guess):
     correct_numbers = 0
