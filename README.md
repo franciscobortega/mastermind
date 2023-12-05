@@ -2,6 +2,8 @@
 
 ## Day 1
 
+![User flow diagram for core game logic](mastermind.png)
+
 ## Day 2
 
 ## Day 3
