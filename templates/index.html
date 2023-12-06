@@ -1,4 +1,8 @@
 {% extends 'base.html' %} {% block title %}Home Screen{% endblock %} {% block
 content %}
 <h1>Welcome to MasterMind!</h1>
+<form action="/single">
+  <label for="name-input">Start Game</label>
+  <input type="submit" />
+</form>
 {% endblock %}
