@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
+import requests
 from random import randint
 
 app = Flask(__name__)
@@ -7,10 +8,26 @@ NUM_ATTEMPTS = 10
 
 def generate_code():
     """Generate a random 4-digit code."""
+    
+    # base_url = "https://www.random.org/integers/"
+
+    # payload = {'num': 4,
+    #            'min': 0,
+    #            'max': 7,
+    #            'col': 1,
+    #            'base': 10,
+    #            'format': 'plain',
+    #            'rnd': 'new'}
+
+    # response = requests.get(base_url, params=payload)
+
+    # print(response.text) # prints plain text response, with one integer per line.
+
     code = []
 
     for _ in range(4):
         code.append(randint(0,7))
+
 
     return code 
 
