@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template, request
 import requests
 from random import randint
 
@@ -35,6 +35,15 @@ def check_guess(secret_code, guess):
     correct_numbers = 0
     correct_locations = 0
 
+    # Convert user's guess and secret code into lists
+    guess = [int(x) for x in guess]
+    #TODO: secret code is being converted into a string at some point between the client-server or server-client transmissions.
+    # potentially store server-side via as a session variable or as part of the database
+    secret_code = secret_code.strip('][').split(', ')
+    secret_code = [int(x) for x in secret_code]
+
+    print(guess, secret_code)
+
     for index, num in enumerate(guess):
         if num in secret_code:
             correct_numbers += 1
@@ -57,13 +66,25 @@ def home_screen():
 @app.route('/start_single')
 def start_single_game():
     """Start a single-player game."""
+    # Generate a random 4-digit code
     code = generate_code()
+
     return render_template('game.html', code=code, NUM_ATTEMPTS=NUM_ATTEMPTS)
 
 @app.route('/guess', methods=['POST'])
 def evaluate_guess():
     """Evaluate the player's guess."""
-    pass
+    # Extract the user's guess and secret code from the form data
+    user_guess = request.form.get('guess')
+    secret_code = request.form.get('secret_code')
+
+    print(user_guess, secret_code)
+
+    # Process the user's guess against the secret code
+    feedback = check_guess(secret_code, user_guess) 
+
+    # Return feedback as JSON
+    return jsonify({'feedback': feedback})
 
 @app.route('/end', methods=['POST'])
 def end_game():
