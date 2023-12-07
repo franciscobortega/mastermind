@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 import requests
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 from random import randint
 
 app = Flask(__name__)
@@ -14,6 +14,12 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     print('WebSocket disconnected')
+
+# TESTING WEBSOCKET
+@socketio.on('lobby_message')
+def handle_lobby_message(message):
+    print(f"Received message: {message}")
+    emit('lobby_message', message, broadcast=True)
 
 # constant and global variables
 num_attempts = 10
