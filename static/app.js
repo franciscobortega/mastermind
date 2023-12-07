@@ -29,6 +29,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => {
           console.error("Error:", error);
         });
+
+      // Clear the form
+      document.getElementById("guess-form").reset();
     });
 
   function displayFeedback(feedback) {
