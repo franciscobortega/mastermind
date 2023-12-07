@@ -99,10 +99,16 @@ def start_single_game():
 
     return render_template('game.html', code=code, num_attempts=num_attempts)
 
-@app.route('/start_multi')
-def start_multiplayer_game():
-    """Start a multi-player game."""
+@app.route('/load_lobby', methods=['POST'])
+def load_lobby():
+    """Display lobby for multiplayer game."""
     print("Starting multi-player game...")
+    return render_template('lobby.html')
+
+@app.route('/lobby')
+def display_lobby():
+    """Display lobby for multiplayer game."""
+    return render_template('lobby.html')
 
 @app.route('/guess', methods=['POST'])
 def evaluate_guess():
