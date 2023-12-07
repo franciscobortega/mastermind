@@ -8,7 +8,6 @@ block content %}
 <form id="guess-form">
   <label for="guess-input">Enter your guess (e.g., 0123): "</label>
   <input type="hidden" id="secret-code" name="secret_code" value="{{ code }}" />
-  <!-- TODO: Add server-side validation of guess input in place of min/max -->
   <input
     type="number"
     name="guess"

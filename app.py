@@ -45,6 +45,11 @@ def check_guess(secret_code, guess):
     secret_code = secret_code.strip('][').split(', ')
     secret_code = [int(x) for x in secret_code]
 
+    # Validate the user's guess input
+    # TODO: make sure that the user's guess falls within the expected range
+    if len(guess) != 4:
+        return "Please enter a 4-digit guess."
+
     #TODO: Add additional mechanism to handle game over state
     if game_over and guessed:
         return "Game Over. The correct code was already guessed."
