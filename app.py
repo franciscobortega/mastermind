@@ -5,8 +5,9 @@ from random import randint
 app = Flask(__name__)
 
 # constant and global variables
-NUM_ATTEMPTS = 10
+num_attempts = 10
 game_over = False;
+guessed = False;
 
 def generate_code():
     """Generate a random 4-digit code."""
@@ -35,8 +36,8 @@ def generate_code():
 
 def check_guess(secret_code, guess):
     """Evaluate the player's guess."""
-    global game_over
-    
+    global game_over, num_attempts, guessed
+
     # Convert user's guess and secret code into lists
     guess = [int(x) for x in guess]
     #TODO: secret code is being converted into a string at some point between the client-server or server-client transmissions.
@@ -45,12 +46,20 @@ def check_guess(secret_code, guess):
     secret_code = [int(x) for x in secret_code]
 
     #TODO: Add additional mechanism to handle game over state
-    if game_over:
+    if game_over and guessed:
         return "Game Over. The correct code was already guessed."
+    
+    # End game if user had exhausted all attempts
+    if num_attempts <= 0:
+        game_over = True
+        return f"Game Over. No more attempts. The secret code was {secret_code}."
+    
+    num_attempts -= 1
 
     # End game if the guess is a full match with the secret code
     if guess == secret_code:
         game_over = True
+        guessed = True
         return "You won! You guessed the code correctly!"
     
     correct_numbers = 0
@@ -83,7 +92,7 @@ def start_single_game():
     # Generate a random 4-digit code
     code = generate_code()
 
-    return render_template('game.html', code=code, NUM_ATTEMPTS=NUM_ATTEMPTS)
+    return render_template('game.html', code=code, num_attempts=num_attempts)
 
 @app.route('/guess', methods=['POST'])
 def evaluate_guess():
