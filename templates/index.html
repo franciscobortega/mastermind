@@ -1,8 +1,26 @@
-{% extends 'base.html' %} {% block title %}Home Screen{% endblock %} {% block
-content %}
+{% extends 'base.html' %} {% block title %}MasterMind - Home{% endblock %} {%
+block content %}
 <h1>Welcome to MasterMind!</h1>
 <form action="/start_single">
   <label>Start Game</label>
   <input type="submit" />
+</form>
+
+<form id="join-multi-form" onsubmit="handleMultiplayer(e)">
+  <!-- Input for game code -->
+  <input
+    type="text"
+    id="multi-game-code"
+    placeholder="Enter Game Code"
+    required
+  />
+
+  <!-- Options to host or join game-->
+  <input type="radio" id="host-game" name="game-option" value="host" />
+  <label for="host-game">Host a New Game</label>
+  <input type="radio" id="join-game" name="game-option" value="join" />
+  <label for="join-game">Join Existing Game</label>
+
+  <button type="submit">Start / Join</button>
 </form>
 {% endblock %}
