@@ -1,8 +1,19 @@
 from flask import Flask, jsonify, render_template, request
 import requests
+from flask_socketio import SocketIO
 from random import randint
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
+
+@socketio.on('connect')
+def handle_connect():
+    print('WebSocket connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('WebSocket disconnected')
 
 # constant and global variables
 num_attempts = 10
@@ -131,4 +142,4 @@ def end_game():
     pass
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app)

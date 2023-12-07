@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block title %}MasterMind - Multiplayer Game{%
+{% extends 'base.html' %} {% block title %}MasterMind - Multiplayer Lobby{%
 endblock %} {% block content %}
 <h1>Welcome to MasterMind!</h1>
 <p>You are in the lobby!</p>
@@ -44,4 +44,8 @@ endblock %} {% block content %}
 
   <button type="submit">Start Game</button>
 </form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+
+<script src="static/js/lobby.js"></script>
 {% endblock %}
