@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((response) => response.json())
         .then((data) => {
           // Update UI with feedback from guess
-          displayFeedback(data.feedback);
+          displayFeedback(guessInput, data.feedback);
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -34,10 +34,10 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("guess-form").reset();
     });
 
-  function displayFeedback(feedback) {
+  function displayFeedback(guess, feedback) {
     // Create a new list item element for the feedback history
     let newFeedbackItem = document.createElement("li");
-    newFeedbackItem.textContent = feedback;
+    newFeedbackItem.textContent = `You guessed [${guess}]: ${feedback}`;
 
     // Append the new list item to the feedback container
     let feedbackContainer = document.querySelector(".feedback-container");
