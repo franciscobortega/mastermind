@@ -6,7 +6,7 @@ endblock %} {% block content %}
   You have {{num_attempts}} attempts to guess the 4-digit code (0-7). Good luck!
 </p>
 <form id="guess-form">
-  <label for="guess-input">Enter your guess (e.g., 0123): "</label>
+  <label for="guess-input">Enter your guess (e.g., 0123): </label>
   <input type="hidden" id="secret-code" name="secret_code" value="{{ code }}" />
   <input
     type="number"

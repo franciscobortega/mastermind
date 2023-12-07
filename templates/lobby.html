@@ -2,4 +2,46 @@
 endblock %} {% block content %}
 <h1>Welcome to MasterMind!</h1>
 <p>You are in the lobby!</p>
+<form id="lobby-form">
+  <label for="codelength-input">Code Length: </label>
+  <input
+    type="number"
+    name="codelength"
+    id="codelength-input"
+    value="4"
+    disabled
+  />
+
+  <label for="attempts-input">Number of Attempts: </label>
+  <input
+    type="number"
+    name="attempts"
+    id="attempts-input"
+    value="10"
+    disabled
+  />
+
+  <label for="rounds-input">Number of Rounds</label>
+  <input type="number" name="rounds" id="rounds-input" value="1" disabled />
+
+  <label for="player1-input">Player 1</label>
+  <input
+    type="text"
+    name="player1"
+    id="player1-input"
+    value="codemaker"
+    disabled
+  />
+
+  <label for="player2-input">Player 2</label>
+  <input
+    type="text"
+    name="player2"
+    id="player2-input"
+    value="codebreaker"
+    disabled
+  />
+
+  <button type="submit">Start Game</button>
+</form>
 {% endblock %}
