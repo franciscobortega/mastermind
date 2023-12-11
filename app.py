@@ -176,7 +176,8 @@ def home_screen():
         session["room"] = room
         session["name"] = name
 
-        return redirect(url_for('load_lobby'))
+        # return redirect(url_for('load_lobby'))
+        return redirect(url_for('load_game_room'))
         
     return render_template('index.html')
 
@@ -219,7 +220,7 @@ def load_game_room():
     print("the redirected room is: ", room)
     if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for('home_screen'))
-    return render_template("multiplayer-game.html", code=room)
+    return render_template("multiplayer-game.html", num_attempts=num_attempts, code=room)
 
 @app.route('/lobby')
 def load_lobby():

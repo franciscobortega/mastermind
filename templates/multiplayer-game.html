@@ -22,29 +22,44 @@ endblock %} {% block content %}
     </div>
   </div>
 </div>
+
+<form id="secret-form">
+  <label for="secret-input">Enter the secret code(e.g., 0123): </label>
+  <input type="number" name="secret" id="secret-input" required />
+  <button type="button" name="secret" id="secret-btn" onclick="sendMove()">
+    Send Code
+  </button>
+</form>
+
 <p>
   You have {{num_attempts}} attempts to guess the 4-digit code (0-7). Good luck!
 </p>
-<form id="guess-form">
-  <label for="guess-input">Enter your guess (e.g., 0123): </label>
-  <input type="hidden" id="secret-code" name="secret_code" value="{{ code }}" />
-  <input
-    type="number"
-    name="guess"
-    id="guess-input"
-    min="0000"
-    max="7777"
-    required
-  />
-  <button type="button" name="guess" id="guess-btn" onclick="sendMove()">
-    Send
-  </button>
-</form>
+
 <div>
+  <ul class="guesses-container">
+    <li class="guesses">Guesses</li>
+  </ul>
   <ul class="feedback-container">
     <li class="feedback">Feedback</li>
   </ul>
 </div>
+
+<form id="guess-form">
+  <label for="guess-input">Enter your guess (e.g., 0123): </label>
+  <input type="number" name="guess" id="guess-input" required />
+  <button type="button" name="guess" id="guess-btn" onclick="sendMove()">
+    Send Guess
+  </button>
+</form>
+
+<form id="feedback-form">
+  <label for="feedback-input">Enter your feedback: </label>
+  <input type="text" name="feedback" id="feedback-input" required />
+  <button type="button" name="feedback" id="feedback-btn" onclick="sendMove()">
+    Send Feedback
+  </button>
+</form>
+
 <form action="/">
   <input type="submit" value="Leave Game" />
 </form>

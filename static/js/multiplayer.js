@@ -38,12 +38,34 @@ const sendMessage = () => {
 };
 
 /**
- * Sends a move to the server using WebSocket.
+ * Sends the secret code to the server using WebSocket.
  */
 const sendMove = () => {
-  const moveInput = document.getElementById("guess-input");
+  const codeInput = document.getElementById("secret-input");
 
-  if (moveInput.value === "") return;
-  socket.emit("player_move", { move: moveInput.value });
-  moveInput.value = "";
+  if (codeInput.value === "") return;
+  socket.emit("secret_code", { code: codeInput.value });
+  codeInput.value = "";
+};
+
+/**
+ * Sends a guess to the server using WebSocket.
+ */
+const sendGuess = () => {
+  const guessInput = document.getElementById("guess-input");
+
+  if (guessInput.value === "") return;
+  socket.emit("guess", { guess: guessInput.value });
+  guessInput.value = "";
+};
+
+/**
+ * Sends feedback to the server using WebSocket.
+ */
+const sendFeedback = () => {
+  const feedbackInput = document.getElementById("feedback-input");
+
+  if (feedbackInput.value === "") return;
+  socket.emit("feedback", { feedback: feedbackInput.value });
+  feedbackInput.value = "";
 };
