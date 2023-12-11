@@ -42,9 +42,17 @@ def handle_disconnect():
 
 # TESTING WEBSOCKET
 @socketio.on('lobby_message')
-def handle_lobby_message(message):
-    unique_id = request.sid 
-    emit('lobby_message', {'message': message, 'user_id': unique_id}, room='lobby', include_self=True)
+def handle_lobby_message(data):
+    room = session.get('room')
+    if room not in rooms:
+        return
+    content = {
+        "name": session.get('name'),
+        "message": data["data"],
+    }
+    send(content, to=room)
+    rooms[room]["messages"].append(content)
+    print(f"{session.get('name')} said: {data['data']}")
 
 # constant and global variables
 num_attempts = 10
@@ -185,7 +193,7 @@ def load_lobby():
         return redirect(url_for('home_screen'))
     
 
-    return render_template('lobby.html')
+    return render_template('lobby.html', code=room)
 
 @app.route('/guess', methods=['POST'])
 def evaluate_guess():

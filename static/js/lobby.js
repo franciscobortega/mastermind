@@ -2,8 +2,28 @@
 
 const socket = io();
 
+const messages = document.getElementById("messages");
+
+const createMessage = (name, msg) => {
+  const content = `
+  <div class="message">
+    <span>${name}: ${msg}</span>
+  </div>
+  `;
+
+  messages.innerHTML += content;
+};
+
+socket.on("message", (data) => {
+  createMessage(data.name, data.message);
+});
+
 const sendMessage = () => {
-  console.log("sent");
+  const message = document.getElementById("message");
+
+  if (message.value === "") return;
+  socket.emit("lobby_message", { data: message.value });
+  message.value = "";
 };
 
 // socket.on("connect", () => {
