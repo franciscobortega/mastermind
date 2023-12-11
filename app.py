@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 import requests
-from flask_socketio import SocketIO, emit, join_room
+from flask_socketio import SocketIO, emit, join_room, leave_room, send
 from random import randint
 
 app = Flask(__name__)
@@ -8,14 +8,37 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 @socketio.on('connect')
-def handle_connect():
-    unique_id = request.sid
-    join_room('lobby')
-    emit('user_connected', {'user_id': unique_id}, room='lobby')
+def handle_connect(auth):
+    room = session.get('room')
+    name = session.get('name')
+
+    if not room or not name:
+        return
+    if room not in rooms:
+        leave_room(room)
+        return
+    
+    join_room(room)
+    send({"name": name, "message": "has entered the room."}, to=room)
+    rooms[room]["members"] += 1
+    print(f"{name} joined room {room}")
+
+
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    print('WebSocket disconnected')
+    room = session.get('room')
+    name = session.get('name')
+    leave_room(room)
+
+    if room in rooms:
+        rooms[room]["members"] -= 1
+        if rooms[room]["members"] <= 0:
+            del rooms[room]
+
+    
+    send({"name": name, "message": "has left the room."}, to=room)
+    print(f"{name} has left room {room}")
 
 # TESTING WEBSOCKET
 @socketio.on('lobby_message')
