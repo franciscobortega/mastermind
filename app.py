@@ -168,7 +168,7 @@ def home_screen():
 
         if create != False:
             # TODO: generate unique game room code
-            room = 'ABCD'
+            room = 'lobby'
             rooms[room] = {"members": 0, "messages": [], "participants": []}
         elif code not in rooms:
             return render_template('index.html', error="Room does not exist.", code=code, name=name)
@@ -196,16 +196,20 @@ def redirect_multiplayer_game():
     # validate that 2 players are in the lobby
     participants = rooms[room]["participants"]  # Get session IDs of participants
 
+    print(participants)
+
     if len(participants) != 2:
+        print("Not enough participants")
         # Redirect logic when not enough participants
         return redirect(url_for('home_screen'))
 
     for participant in participants:
         # leave_room(room, participant)  # Leave the player from the lobby room
         join_room("game_room", participant)  # Move players to the game room
+        print(rooms)
 
     session["room"] = "game_room"
-
+ 
     emit('redirect_game_room', room="game_room", to=room)
 
 @app.route('/game_room')

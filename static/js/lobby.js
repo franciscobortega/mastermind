@@ -38,7 +38,7 @@ const sendMessage = () => {
   message.value = "";
 };
 
-document.getElementById("lobby-form").addEventListener("submit", function (e) {
+lobbyForm.addEventListener("submit", function (e) {
   e.preventDefault();
   console.log("clicked lobby form");
 

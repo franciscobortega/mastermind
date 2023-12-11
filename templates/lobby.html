@@ -11,7 +11,6 @@ endblock %} {% block content %}
     value="4"
     disabled
   />
-
   <label for="attempts-input">Number of Attempts: </label>
   <input
     type="number"
@@ -20,31 +19,9 @@ endblock %} {% block content %}
     value="10"
     disabled
   />
-
-  <label for="rounds-input">Number of Rounds</label>
-  <input type="number" name="rounds" id="rounds-input" value="1" disabled />
-
-  <label for="player1-input">Player 1</label>
-  <input
-    type="text"
-    name="player1"
-    id="player1-input"
-    value="codemaker"
-    disabled
-  />
-
-  <label for="player2-input">Player 2</label>
-  <input
-    type="text"
-    name="player2"
-    id="player2-input"
-    value="codebreaker"
-    disabled
-  />
   <button type="submit">Start Game</button>
 </form>
 
-<!-- ONLY FOR TESTING WEBSOCKET -->
 <div class="message-container">
   <h2>Chat Room: {{ code }}</h2>
   <div class="messages" id="messages"></div>
@@ -67,6 +44,5 @@ endblock %} {% block content %}
 </form>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
-
 <script src="static/js/lobby.js"></script>
 {% endblock %}
