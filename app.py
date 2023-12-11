@@ -11,6 +11,7 @@ socketio = SocketIO(app)
 def handle_connect(auth):
     room = session.get('room')
     name = session.get('name')
+    unique_id = request.sid
 
     if not room or not name:
         return
@@ -21,7 +22,10 @@ def handle_connect(auth):
     join_room(room)
     send({"name": name, "message": "has entered the room."}, to=room)
     rooms[room]["members"] += 1
+    rooms[room]["participants"].append(unique_id)
     print(f"{name} joined room {room}")
+    print(rooms[room]["participants"])
+    print(rooms)
 
 
 
@@ -29,12 +33,19 @@ def handle_connect(auth):
 def handle_disconnect():
     room = session.get('room')
     name = session.get('name')
+    unique_id = request.sid
+
     leave_room(room)
 
     if room in rooms:
+        if unique_id in rooms[room]["participants"]:
+            rooms[room]["participants"].remove(unique_id)
+
         rooms[room]["members"] -= 1
         if rooms[room]["members"] <= 0:
             del rooms[room]
+
+    print(rooms)
 
     
     send({"name": name, "message": "has left the room."}, to=room)
@@ -158,7 +169,7 @@ def home_screen():
         if create != False:
             # TODO: generate unique game room code
             room = 'ABCD'
-            rooms[room] = {"members": 0, "messages": []}
+            rooms[room] = {"members": 0, "messages": [], "participants": []}
         elif code not in rooms:
             return render_template('index.html', error="Room does not exist.", code=code, name=name)
 
@@ -177,13 +188,34 @@ def start_single_game():
 
     return render_template('game.html', code=code, num_attempts=num_attempts)
 
-@app.route('/start_multi')
-def start_multiplayer_game():
-    """Start a multiplayer game."""
-    # TODO: have host generate a random 4-digit code
-    code = 1234
+@socketio.on('redirect_multi_game')
+def redirect_multiplayer_game():
+    """Redirect players to multiplayer game."""
+    room = session.get("room")
+    
+    # validate that 2 players are in the lobby
+    participants = rooms[room]["participants"]  # Get session IDs of participants
 
-    return render_template('multiplayer-game.html', code=code, num_attempts=num_attempts)
+    if len(participants) != 2:
+        # Redirect logic when not enough participants
+        return redirect(url_for('home_screen'))
+
+    for participant in participants:
+        # leave_room(room, participant)  # Leave the player from the lobby room
+        join_room("game_room", participant)  # Move players to the game room
+
+    session["room"] = "game_room"
+
+    emit('redirect_game_room', room="game_room", to=room)
+
+@app.route('/game_room')
+def load_game_room():
+    """Display game room for a multiplayer game."""
+    room = session.get("room")
+    print("the redirected room is: ", room)
+    if room is None or session.get("name") is None or room not in rooms:
+        return redirect(url_for('home_screen'))
+    return render_template("multiplayer-game.html", code=room)
 
 @app.route('/lobby')
 def load_lobby():

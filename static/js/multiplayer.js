@@ -3,7 +3,6 @@
 const socket = io();
 
 const messages = document.getElementById("messages");
-const lobbyForm = document.getElementById("lobby-form");
 
 /**
  * Function to create and display a new message in the lobby.
@@ -37,16 +36,3 @@ const sendMessage = () => {
   socket.emit("lobby_message", { data: message.value });
   message.value = "";
 };
-
-document.getElementById("lobby-form").addEventListener("submit", function (e) {
-  e.preventDefault();
-  console.log("clicked lobby form");
-
-  // Emit the event to start the game
-  socket.emit("redirect_multi_game");
-});
-
-socket.on("redirect_game_room", function () {
-  // Redirect players to the game room
-  window.location.href = "/game_room"; // Redirect to the game room route
-});

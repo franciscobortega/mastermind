@@ -5,7 +5,22 @@ endblock %} {% block content %}
   <p>Players</p>
 </div>
 <div id="chat-container">
-  <p>Chat Messages:</p>
+  <div class="message-container">
+    <h2>Chat Room: {{ code }}</h2>
+    <div class="messages" id="messages"></div>
+    <div class="inputs" id="inputs">
+      <input
+        type="text"
+        rows="3"
+        placeholder="Message"
+        name="message"
+        id="message"
+      />
+      <button type="button" name="send" id="send-btn" onclick="sendMessage()">
+        Send
+      </button>
+    </div>
+  </div>
 </div>
 <p>
   You have {{num_attempts}} attempts to guess the 4-digit code (0-7). Good luck!
@@ -31,5 +46,7 @@ endblock %} {% block content %}
 <form action="/">
   <input type="submit" value="Leave Game" />
 </form>
-<script src="static/js/game.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+<script src="static/js/multiplayer.js"></script>
 {% endblock %}
