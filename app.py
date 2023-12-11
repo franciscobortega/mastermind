@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 import requests
 from flask_socketio import SocketIO, emit, join_room
 from random import randint
@@ -27,6 +27,7 @@ def handle_lobby_message(message):
 num_attempts = 10
 game_over = False;
 guessed = False;
+rooms = {}
 
 def generate_code():
     """Generate a random 4-digit code."""
@@ -105,9 +106,36 @@ def check_guess(secret_code, guess):
     else:
         return f"{correct_numbers} correct numbers and {correct_locations} correct locations"
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def home_screen():
     """Render the home screen."""
+    session.clear()
+    if request.method == 'POST':
+        name = request.form.get('name')
+        code = request.form.get('code')
+        join = request.form.get('join', False)
+        create = request.form.get('create', False)
+
+        if not name:
+            return render_template('index.html', error="Please enter a name.", code=code, name=name)
+        
+        if join != False and not code:
+            return render_template('index.html', error="Please enter a game code.", code=code, name=name)
+        
+        room = code
+
+        if create != False:
+            # TODO: generate unique game room code
+            room = 'ABCD'
+            rooms[room] = {"members": 0, "messages": []}
+        elif code not in rooms:
+            return render_template('index.html', error="Room does not exist.", code=code, name=name)
+
+        session["room"] = room
+        session["name"] = name
+
+        return redirect(url_for('load_lobby'))
+        
     return render_template('index.html')
 
 @app.route('/start_single')
@@ -126,15 +154,14 @@ def start_multiplayer_game():
 
     return render_template('multiplayer-game.html', code=code, num_attempts=num_attempts)
 
-@app.route('/load_lobby', methods=['POST'])
+@app.route('/lobby')
 def load_lobby():
     """Display lobby for multiplayer game."""
-    print("Starting multi-player game...")
-    return render_template('lobby.html')
+    room = session.get("room")
+    if room is None or session.get("name") is None or room not in rooms:
+        return redirect(url_for('home_screen'))
+    
 
-@app.route('/lobby')
-def display_lobby():
-    """Display lobby for multiplayer game."""
     return render_template('lobby.html')
 
 @app.route('/guess', methods=['POST'])
@@ -158,4 +185,4 @@ def end_game():
     pass
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, debug=True)

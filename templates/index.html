@@ -8,27 +8,26 @@ block content %}
     <input type="submit" />
   </form>
 
-  <form id="join-multi-form">
+  <form id="join-multi-form" method="post">
     <h2>Multiplayer</h2>
-    <!-- Input for game code -->
-    <input
-      type="text"
-      id="multi-game-code"
-      placeholder="Enter Game Code"
-      required
-    />
-
+    <!-- Input for name -->
+    <div>
+      <label for="multi-game-name">Name:</label>
+      <input
+        type="text"
+        id="multi-game-name"
+        placeholder="Pick a name!"
+        name="name"
+        value="{{name}}"
+        required
+      />
+    </div>
     <!-- Options to host or join game-->
-    <label for="host-game">
-      <input type="radio" id="host-game" name="game-option" value="host" />
-      Host a New Game
-    </label>
-    <label for="join-game">
-      <input type="radio" id="join-game" name="game-option" value="join" />
-      Join Existing Game
-    </label>
-
-    <button type="submit">Start / Join</button>
+    <div>
+      <input type="text" placeholder="Room Code" name="code" value="{{code}}" />
+      <button type="submit" name="join">Join a Game</button>
+    </div>
+    <button type="submit" name="create">Create a Game</button>
   </form>
 
   <form id="join-battle-form">
@@ -37,6 +36,8 @@ block content %}
     <input type="submit" />
   </form>
 </div>
-
-<script src="static/js/app.js"></script>
+{% if error %}
+<p>{{error}}</p>
+{% endif %}
+<!-- <script src="static/js/app.js"></script> -->
 {% endblock %}
