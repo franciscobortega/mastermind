@@ -36,3 +36,14 @@ const sendMessage = () => {
   socket.emit("lobby_message", { data: message.value });
   message.value = "";
 };
+
+/**
+ * Sends a move to the server using WebSocket.
+ */
+const sendMove = () => {
+  const moveInput = document.getElementById("guess-input");
+
+  if (moveInput.value === "") return;
+  socket.emit("player_move", { move: moveInput.value });
+  moveInput.value = "";
+};

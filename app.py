@@ -242,6 +242,12 @@ def evaluate_guess():
     # Return feedback as JSON
     return jsonify({'feedback': feedback})
 
+@socketio.on('player_move')
+def handle_player_move(data):
+    move = data['move']  # Move made by the player
+
+    print(move)
+
 @app.route('/end', methods=['POST'])
 def end_game():
     """End the game."""

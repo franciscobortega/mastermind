@@ -36,7 +36,9 @@ endblock %} {% block content %}
     max="7777"
     required
   />
-  <input type="submit" />
+  <button type="button" name="guess" id="guess-btn" onclick="sendMove()">
+    Send
+  </button>
 </form>
 <div>
   <ul class="feedback-container">
