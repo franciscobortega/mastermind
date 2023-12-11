@@ -1,28 +1,42 @@
 {% extends 'base.html' %} {% block title %}MasterMind - Home{% endblock %} {%
 block content %}
 <h1>Welcome to MasterMind!</h1>
-<form action="/start_single">
-  <label>Start Game</label>
-  <input type="submit" />
-</form>
+<div class="game-options">
+  <form action="/start_single">
+    <h2>Singleplayer</h2>
+    <label>Start Game</label>
+    <input type="submit" />
+  </form>
 
-<form id="join-multi-form">
-  <!-- Input for game code -->
-  <input
-    type="text"
-    id="multi-game-code"
-    placeholder="Enter Game Code"
-    required
-  />
+  <form id="join-multi-form">
+    <h2>Multiplayer</h2>
+    <!-- Input for game code -->
+    <input
+      type="text"
+      id="multi-game-code"
+      placeholder="Enter Game Code"
+      required
+    />
 
-  <!-- Options to host or join game-->
-  <input type="radio" id="host-game" name="game-option" value="host" />
-  <label for="host-game">Host a New Game</label>
-  <input type="radio" id="join-game" name="game-option" value="join" />
-  <label for="join-game">Join Existing Game</label>
+    <!-- Options to host or join game-->
+    <label for="host-game">
+      <input type="radio" id="host-game" name="game-option" value="host" />
+      Host a New Game
+    </label>
+    <label for="join-game">
+      <input type="radio" id="join-game" name="game-option" value="join" />
+      Join Existing Game
+    </label>
 
-  <button type="submit">Start / Join</button>
-</form>
+    <button type="submit">Start / Join</button>
+  </form>
+
+  <form id="join-battle-form">
+    <h2>Battle Royale</h2>
+    <label>Join Game</label>
+    <input type="submit" />
+  </form>
+</div>
 
 <script src="static/js/app.js"></script>
 {% endblock %}
