@@ -65,6 +65,48 @@ def handle_lobby_message(data):
     rooms[room]["messages"].append(content)
     print(f"{session.get('name')} said: {data['data']}")
 
+@socketio.on('secret_code')
+def handle_secret_code(data):
+    room = session.get('room')
+    if room not in rooms:
+        return
+    content = {
+        "name": session.get('name'),
+        "secret_code": data["code"],
+    }
+    # send(content, to=room)
+    rooms[room]["secret_code"] = content["secret_code"]
+    print(rooms)
+    print(f"{session.get('name')} set the secret code to {content['secret_code']}")
+
+@socketio.on('multiplayer_guess')
+def handle_multiplayer_guess(data):
+    room = session.get('room')
+    if room not in rooms:
+        return
+    content = {
+        "name": session.get('name'),
+        "guess": data["guess"],
+    }
+    # send(content, to=room)
+    rooms[room]["guess"] = content["guess"]
+    print(rooms)
+    print(f"{session.get('name')} guessed: {content['guess']}")
+
+@socketio.on('multiplayer_feedback')
+def handle_multiplayer_feedback(data):
+    room = session.get('room')
+    if room not in rooms:
+        return
+    content = {
+        "name": session.get('name'),
+        "feedback": data["feedback"],
+    }
+    # send(content, to=room)
+    rooms[room]["feedback"] = content["feedback"]
+    print(rooms)
+    print(f"{session.get('name')} gave feedback: {content['feedback']}")
+
 # constant and global variables
 num_attempts = 10
 game_over = False;

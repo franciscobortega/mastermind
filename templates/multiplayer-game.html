@@ -26,7 +26,7 @@ endblock %} {% block content %}
 <form id="secret-form">
   <label for="secret-input">Enter the secret code(e.g., 0123): </label>
   <input type="number" name="secret" id="secret-input" required />
-  <button type="button" name="secret" id="secret-btn" onclick="sendMove()">
+  <button type="button" name="secret" id="secret-btn" onclick="sendCode()">
     Send Code
   </button>
 </form>
@@ -47,7 +47,7 @@ endblock %} {% block content %}
 <form id="guess-form">
   <label for="guess-input">Enter your guess (e.g., 0123): </label>
   <input type="number" name="guess" id="guess-input" required />
-  <button type="button" name="guess" id="guess-btn" onclick="sendMove()">
+  <button type="button" name="guess" id="guess-btn" onclick="sendGuess()">
     Send Guess
   </button>
 </form>
@@ -55,7 +55,12 @@ endblock %} {% block content %}
 <form id="feedback-form">
   <label for="feedback-input">Enter your feedback: </label>
   <input type="text" name="feedback" id="feedback-input" required />
-  <button type="button" name="feedback" id="feedback-btn" onclick="sendMove()">
+  <button
+    type="button"
+    name="feedback"
+    id="feedback-btn"
+    onclick="sendFeedback()"
+  >
     Send Feedback
   </button>
 </form>

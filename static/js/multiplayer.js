@@ -40,7 +40,7 @@ const sendMessage = () => {
 /**
  * Sends the secret code to the server using WebSocket.
  */
-const sendMove = () => {
+const sendCode = () => {
   const codeInput = document.getElementById("secret-input");
 
   if (codeInput.value === "") return;
@@ -55,7 +55,7 @@ const sendGuess = () => {
   const guessInput = document.getElementById("guess-input");
 
   if (guessInput.value === "") return;
-  socket.emit("guess", { guess: guessInput.value });
+  socket.emit("multiplayer_guess", { guess: guessInput.value });
   guessInput.value = "";
 };
 
@@ -66,6 +66,6 @@ const sendFeedback = () => {
   const feedbackInput = document.getElementById("feedback-input");
 
   if (feedbackInput.value === "") return;
-  socket.emit("feedback", { feedback: feedbackInput.value });
+  socket.emit("multiplayer_feedback", { feedback: feedbackInput.value });
   feedbackInput.value = "";
 };
