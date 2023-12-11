@@ -22,7 +22,20 @@ def handle_connect(auth):
     join_room(room)
     send({"name": name, "message": "has entered the room."}, to=room)
     rooms[room]["members"] += 1
-    rooms[room]["participants"].append(unique_id)
+
+    if len(rooms[room]["participants"]) == 0:
+        rooms[room]["participants"].append({
+            "player_id": unique_id,
+            "name": name,
+            "role": "codemaker"
+        })
+    else:
+        rooms[room]["participants"].append({
+            "player_id": unique_id,
+            "name": name,
+            "role": "codebreaker"
+        })
+
     print(f"{name} joined room {room}")
     print(rooms[room]["participants"])
     print(rooms)
@@ -262,7 +275,14 @@ def load_game_room():
     print("the redirected room is: ", room)
     if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for('home_screen'))
-    return render_template("multiplayer-game.html", num_attempts=num_attempts, code=room)
+
+    user_role = None
+    if "participants" in rooms[room]:
+        for participant in rooms[room]["participants"]:
+                user_role = participant["role"]
+                break
+
+    return render_template("multiplayer-game.html", num_attempts=num_attempts, code=room, user_role=user_role)
 
 @app.route('/lobby')
 def load_lobby():
