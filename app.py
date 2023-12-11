@@ -118,6 +118,14 @@ def start_single_game():
 
     return render_template('game.html', code=code, num_attempts=num_attempts)
 
+@app.route('/start_multi')
+def start_multiplayer_game():
+    """Start a multiplayer game."""
+    # TODO: have host generate a random 4-digit code
+    code = 1234
+
+    return render_template('multiplayer-game.html', code=code, num_attempts=num_attempts)
+
 @app.route('/load_lobby', methods=['POST'])
 def load_lobby():
     """Display lobby for multiplayer game."""

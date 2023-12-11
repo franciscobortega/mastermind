@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block title %}MasterMind - Multiplayer Game{%
+endblock %} {% block content %}
+<h1>Welcome to MasterMind!</h1>
+<div id="players-container">
+  <p>Players</p>
+</div>
+<div id="chat-container">
+  <p>Chat Messages:</p>
+</div>
+<p>
+  You have {{num_attempts}} attempts to guess the 4-digit code (0-7). Good luck!
+</p>
+<form id="guess-form">
+  <label for="guess-input">Enter your guess (e.g., 0123): </label>
+  <input type="hidden" id="secret-code" name="secret_code" value="{{ code }}" />
+  <input
+    type="number"
+    name="guess"
+    id="guess-input"
+    min="0000"
+    max="7777"
+    required
+  />
+  <input type="submit" />
+</form>
+<div>
+  <ul class="feedback-container">
+    <li class="feedback">Feedback</li>
+  </ul>
+</div>
+<script src="static/js/game.js"></script>
+{% endblock %}
