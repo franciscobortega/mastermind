@@ -41,16 +41,31 @@ endblock %} {% block content %}
     value="codebreaker"
     disabled
   />
-
-  <!-- ONLY FOR TESTING WEBSOCKET -->
-  <label for="testmessage-input">Type your message: </label>
-  <input type="text" name="testmessage" id="testmessage-input" />
-
   <button type="submit">Start Game</button>
 </form>
+
+<!-- ONLY FOR TESTING WEBSOCKET -->
+<div class="message-container">
+  <h2>Chat Room: {{ room }}</h2>
+  <div class="messages" id="messages"></div>
+  <div class="inputs" id="inputs">
+    <input
+      type="text"
+      rows="3"
+      placeholder="Message"
+      name="message"
+      id="message"
+    />
+    <button type="button" name="send" id="send-btn" onclick="sendMessage()">
+      Send
+    </button>
+  </div>
+</div>
+
 <form action="/">
   <input type="submit" value="Leave Game" />
 </form>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
 
 <script src="static/js/lobby.js"></script>
