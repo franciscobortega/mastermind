@@ -3,6 +3,7 @@ import requests
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
 from random import randint, choice
 from string import ascii_uppercase
+from model import connect_to_db, db
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -343,4 +344,5 @@ def end_game():
     pass
 
 if __name__ == '__main__':
+    connect_to_db(app)
     socketio.run(app, debug=True)
