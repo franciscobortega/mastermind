@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 import requests
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
-from random import randint
+from random import randint, choice
+from string import ascii_uppercase
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -153,8 +154,21 @@ game_over = False;
 guessed = False;
 rooms = {}
 
-def generate_code():
-    """Generate a random 4-digit code."""
+def generate_room_code(length):
+    """Generate a random 4-character room code."""
+    while True:
+        code = ""
+
+        for _ in range(length):
+            code += choice(ascii_uppercase)
+
+        if code not in rooms:
+            break
+
+    return code 
+
+def generate_secret_code():
+    """Generate a random 4-digit secret code."""
     
     # base_url = "https://www.random.org/integers/"
 
@@ -249,8 +263,8 @@ def home_screen():
         room = code
 
         if create != False:
-            # TODO: generate unique game room code
-            room = 'lobby'
+            room = generate_room_code(4)
+            # room = 'lobby' # for testing purposes
             rooms[room] = {"members": 0, "messages": [], "participants": []}
         elif code not in rooms:
             return render_template('index.html', error="Room does not exist.", code=code, name=name)
@@ -269,7 +283,7 @@ def home_screen():
 def start_single_game():
     """Start a single-player game."""
     # Generate a random 4-digit code
-    code = generate_code()
+    code = generate_secret_code()
 
     return render_template('game.html', code=code, num_attempts=num_attempts)
 
