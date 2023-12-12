@@ -21,9 +21,15 @@ class TestCheckGuess(unittest.TestCase):
         result = check_guess(secret_code, guess)
         self.assertEqual(result, "Please enter a 4-digit guess.")
 
+    def test_guess_digits_are_in_range(self):
+        secret_code = [1, 2, 3, 4]
+        guess = [9, 9, 9, 9]
+        result = check_guess(secret_code, guess)
+        self.assertEqual(result, "Please provide only digits between 0 and 7.")
+
     def test_guess_all_incorrect(self):
         secret_code = [1, 2, 3, 4]
-        guess = [5, 6, 7, 8]
+        guess = [5, 6, 7, 7]
         result = check_guess(secret_code, guess)
         self.assertEqual(result, "all incorrect")
 

@@ -83,7 +83,14 @@ endblock %} {% block content %}
   {% if user_role == 'codebreaker' %}
   <form id="guess-form">
     <label for="guess-input">Enter your guess (e.g., 0123): </label>
-    <input type="number" name="guess" id="guess-input" required />
+    <input
+      type="number"
+      name="guess"
+      id="guess-input"
+      min="0000"
+      max="7777"
+      required
+    />
     <button type="button" name="guess" id="guess-btn" onclick="sendGuess()">
       Send Guess
     </button>

@@ -222,9 +222,12 @@ def check_guess(secret_code, guess):
         secret_code = [int(x) for x in secret_code]
 
     # Validate the user's guess input
-    # TODO: make sure that the user's guess falls within the expected range
     if len(guess) != 4:
         return "Please enter a 4-digit guess."
+    
+    for num in guess:
+        if num not in [0, 1, 2, 3, 4, 5, 6, 7]:
+            return "Please provide only digits between 0 and 7."
 
     #TODO: Add additional mechanism to handle game over state
     if game_over and guessed:
