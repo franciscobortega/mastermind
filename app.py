@@ -52,15 +52,26 @@ def handle_disconnect():
 @socketio.on('lobby_message')
 def handle_lobby_message(data):
     room = session.get('room')
+    name = session.get('name')
+    
     if room not in rooms:
         return
+    
+    role = None
+    
+    for participant in rooms[room]["participants"]:
+        if participant["name"] == name:
+            role = participant["role"]
+            break
+
     content = {
-        "name": session.get('name'),
+        "name": name,
         "message": data["data"],
+        "role": role
     }
     send(content, to=room)
     rooms[room]["messages"].append(content)
-    print(f"{session.get('name')} said: {data['data']}")
+    print(f"{name} said: {data['data']}")
 
 @socketio.on('secret_code')
 def handle_secret_code(data):
@@ -220,6 +231,9 @@ def home_screen():
 
         session["room"] = room
         session["name"] = name
+
+        # set roles in session
+        print(session)
 
         return redirect(url_for('load_game_room'))
         

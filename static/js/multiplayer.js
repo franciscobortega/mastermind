@@ -10,12 +10,25 @@ const gameBoard = document.getElementById("game-board");
  * @param {string} name - The name of the user who sent the message.
  * @param {string} msg - The message content to be displayed.
  */
-const createMessage = (name, msg) => {
+const createMessage = (name, msg, role) => {
   const messageContainer = document.createElement("div");
   messageContainer.classList.add("message");
 
   const messageContent = document.createElement("span");
   messageContent.textContent = `${name}: ${msg}`;
+
+  // Assign message colors based on roles
+  switch (role) {
+    case "codemaker":
+      messageContent.style.color = "red";
+      break;
+    case "codebreaker":
+      messageContent.style.color = "blue";
+      break;
+    default:
+      messageContent.style.backgroundColor = "#ccc";
+      break;
+  }
 
   messageContainer.appendChild(messageContent);
   messages.appendChild(messageContainer);
@@ -25,7 +38,7 @@ const createMessage = (name, msg) => {
  * Event listener for incoming "message" events from the WebSocket.
  */
 socket.on("message", (data) => {
-  createMessage(data.name, data.message);
+  createMessage(data.name, data.message, data.role);
 });
 
 /**
