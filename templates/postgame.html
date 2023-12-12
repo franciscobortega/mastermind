@@ -1,0 +1,8 @@
+{% extends 'base.html' %} {% block title %}MasterMind - Postgame{% endblock %}
+{% block content %}
+<h1>Welcome to MasterMind!</h1>
+<p>You are in the {{mode}} postgame lobby!</p>
+<form action="/">
+  <input type="submit" value="Go Home" />
+</form>
+{% endblock %}

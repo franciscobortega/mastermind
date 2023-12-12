@@ -121,12 +121,18 @@ def handle_multiplayer_guess(data):
         "name": name,
         "guess": data["guess"],
     }
+
     if mode == "multiplayer":
         emit("update_guesses", content, to=room)
     else:
         emit("update_guesses", content, to=request.sid)
         guess_feedback = check_guess(secret_code, content['guess'])
-        emit("guess_feedback", guess_feedback, to=request.sid)
+
+        if guess_feedback == "You won! You guessed the code correctly!":
+            emit("guess_feedback", guess_feedback, to=request.sid)
+            emit("end_battle", to=room)
+        else:
+            emit("guess_feedback", guess_feedback, to=request.sid)
 
     rooms[room]["guess"] = content["guess"]
     print(rooms)
@@ -366,6 +372,12 @@ def handle_start_game():
 
 @socketio.on('start_battle_royale')
 def handle_start_battle_royale():
+    global game_over, guessed, num_attempts
+
+    game_over = False;
+    guessed = False;
+    num_attempts = 10;
+
     room = session.get("room")
     mode = session.get("mode")
     print(room)
@@ -380,9 +392,6 @@ def handle_start_battle_royale():
         "mode": mode,
         "secret_code": secret_code,
     }
-
-    # session["secret_code"] = secret_code
-    # print(session)
 
     emit('set_code', content, to=room)
 
@@ -402,10 +411,22 @@ def evaluate_guess():
     # Return feedback as JSON
     return jsonify({'feedback': feedback})
 
-@app.route('/end', methods=['POST'])
-def end_game():
-    """End the game."""
-    pass
+@app.route('/postgame')
+def display_postgame():
+    """Display the postgame screen."""
+    room = session.get("room")
+    name = session.get("name")
+    mode = session.get("mode")
+
+    if room is None or session.get("name") is None or room not in rooms:
+        return redirect(url_for('home_screen'))
+    
+    # collect game data for each player
+    game_data = []
+
+    # push player data to database
+
+    return render_template("postgame.html", mode=mode, name=name, game_data=game_data)
 
 def get_leaderboard():
     """Get database data for leaderboard."""

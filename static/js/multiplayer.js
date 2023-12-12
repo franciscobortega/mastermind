@@ -155,3 +155,14 @@ socket.on("update_room", () => {
   // Display the game board
   gameBoard.style.display = "block";
 });
+
+socket.on("end_battle", () => {
+  console.log("Game over! Redirecting to endgame page...");
+
+  // TODO: implement function to disable interactive components
+
+  // Redirect to the endgame page after 3 seconds
+  setTimeout(() => {
+    window.location.href = "/postgame";
+  }, 3000);
+});
