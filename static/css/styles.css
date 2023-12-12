@@ -18,10 +18,46 @@
   gap: 10px;
 }
 
+.message-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 40px;
+}
+
 #game-board {
   display: none;
 }
 
 #lobby-options {
   display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.attempts-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100px;
+  margin: 32px;
+}
+
+.attempts-container ul {
+  background-color: #eee;
+}
+
+.attempts-container li {
+  list-style: none;
+}
+
+.title {
+  background-color: #ccc;
+  text-align: center;
+  font-weight: bold;
 }

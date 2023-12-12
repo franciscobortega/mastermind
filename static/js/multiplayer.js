@@ -70,18 +70,14 @@ const sendFeedback = () => {
   feedbackInput.value = "";
 };
 
-function startGame() {
-  console.log("clciked start game");
-
-  // You can also emit an event to the server indicating that the game has started
-  // This event can trigger server-side logic to initialize the game state
+const startGame = () => {
   socket.emit("start_game");
-}
+};
 
 socket.on("update_room", () => {
   // Hide lobby options
   document.getElementById("lobby-options").style.display = "none";
 
-  // Display the game board or relevant game components
+  // Display the game board
   document.getElementById("game-board").style.display = "block";
 });

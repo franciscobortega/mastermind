@@ -3,6 +3,8 @@ endblock %} {% block content %}
 <h1>Welcome to MasterMind, {{ name }}, the {{ user_role }}!</h1>
 <div id="lobby-options">
   <p>You are in the lobby!</p>
+
+  {% if user_role == 'codemaker' %}
   <form id="lobby-form">
     <label for="codelength-input">Code Length: </label>
     <input
@@ -22,10 +24,13 @@ endblock %} {% block content %}
     />
   </form>
   <button id="start-game-btn" onclick="startGame()">Start Game</button>
+  {% else %}
+  <p>Waiting for codemaker to set the secret code...</p>
+  {% endif %}
 </div>
 
 <div class="message-container">
-  <h2>Chat Room: {{ code }}</h2>
+  <h2>Game Code: {{ code }}</h2>
   <div class="messages" id="messages"></div>
   <div class="inputs" id="inputs">
     <input
@@ -46,15 +51,6 @@ endblock %} {% block content %}
 </div>
 
 <div id="game-board">
-  <div id="players-container">
-    <p>Players</p>
-    {% if user_role == 'codemaker' %}
-    <p>You are the codemaker!</p>
-    {% else %}
-    <p>You are the codebreaker!</p>
-    {% endif %}
-  </div>
-
   {% if user_role == 'codemaker' %}
   <form id="secret-form">
     <label for="secret-input">Enter the secret code(e.g., 0123): </label>
@@ -70,12 +66,12 @@ endblock %} {% block content %}
     luck!
   </p>
 
-  <div>
+  <div class="attempts-container">
     <ul class="guesses-container">
-      <li class="guesses">Guesses</li>
+      <li class="guesses title">Guesses</li>
     </ul>
     <ul class="feedback-container">
-      <li class="feedback">Feedback</li>
+      <li class="feedback title">Feedback</li>
     </ul>
   </div>
 
