@@ -1,4 +1,4 @@
-"""Models for Mastermind app."""
+"""Models for Mastermind."""
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -13,13 +13,8 @@ class User(db.Model):
                         autoincrement=True,
                         primary_key=True, )
     username = db.Column(db.String, unique=True)
-    email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
-    wins = db.Column(db.Integer, default=0)
-    losses = db.Column(db.Integer, default=0)
-    total_games = db.Column(db.Integer, default=0)
-    # TODO: implement scoring system
-    # total_points = db.Column(db.Integer, default=0)
+    total_wins = db.Column(db.Integer, default=0)
 
     routes = db.relationship("Route", back_populates="user")
 
