@@ -20,10 +20,20 @@ I finished Day 2 by designing the following data model for the backend within th
 
 ## Day 3
 
-## Day 4
+I spent most of Day 3 researching how to host real-time communication between players and eventually settled on Flask-SocketIO due to its simplicity and flexibility within the context of my Flask application. I was able to create a simple chat interface that taught me how WebSocket communication works. The next step was to determine what extensions for the project I wanted to work on. The most obvious choice was a 1v1 multiplayer game mode but I was also interested in a "Battle Royale" type of mode.
 
-## Day 5
+I laid out the templates and routes necessary for a lobby and multiplayer game. I started the process of redirecting players from the lobby room to the game room with their assigned roles of codemaker and codebreaker.
+
+## Day 4 and 5
+
+Unfortunately, I was unable to work on this project during these two days due to some personal obligations.
 
 ## Day 6
+
+The majority of Day 6 was spent trying to set up the redirection for players in the lobby to the game endpoint. Although the players correctly ended up in the correct room, on the backend the player and session data was not being updated properly in some areas. Ultimately, I decided to implement a single page approach that would not require an explicit redirection.
+
+The event handling between the clients and server was much smoother and by the end of the day I had a functional multiplayer game where the players could join a game via a game code and communicate using a chat interface. The player assigned `codemaker` could intially set the secret code, the player assigned `codebreaker` would then be able to provide a guess, and then have the `codemaker` provide feedback. These interactions with the WebSocket connection would also be transmitted in the chat from the server.
+
+This game mode has no computer validation for feedback to imitate the real Mastermind game, where the codebreaker at the end can then challenge any feedback they have received. Styling was applied to the UI to help players navigate around the game interface.
 
 ## Day 7
