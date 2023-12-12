@@ -9,6 +9,16 @@ def create_user(username, password, total_wins):
 
     return user
 
+def update_user_score(data):
+    """Update an existing user's score."""
+    user = get_user_by_username(data.username)
+
+    user.total_wins = data.total_wins
+
+    db.session.commit()
+
+    return user
+
 def get_users():
     """Return all users."""
 

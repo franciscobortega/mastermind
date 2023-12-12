@@ -424,7 +424,14 @@ def display_postgame():
     # collect game data for each player
     game_data = []
 
+    print("Endgame printed: ", name)
+
     # push player data to database
+    player_data = crud.get_user_by_username(name)
+
+    if player_data:
+        player_data.total_wins += 1
+        crud.update_user_score(player_data)
 
     return render_template("postgame.html", mode=mode, name=name, game_data=game_data)
 
