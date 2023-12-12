@@ -3,6 +3,7 @@
 const socket = io();
 
 const messages = document.getElementById("messages");
+const gameBoard = document.getElementById("game-board");
 
 /**
  * Function to create and display a new message in the lobby.
@@ -48,6 +49,17 @@ const sendCode = () => {
   codeInput.value = "";
 };
 
+socket.on("set_code", (data) => {
+  console.log(`secret code: ${data["secret_code"]}`);
+
+  const secretCodeElement = document.getElementById("display-secret-code");
+  secretCodeElement.textContent = `The secret code is: ${data["secret_code"]}`;
+  secretCodeElement.style.display = "block";
+
+  const secretForm = document.getElementById("secret-form");
+  secretForm.remove();
+});
+
 /**
  * Sends a guess to the server using WebSocket.
  */
@@ -79,5 +91,5 @@ socket.on("update_room", () => {
   document.getElementById("lobby-options").style.display = "none";
 
   // Display the game board
-  document.getElementById("game-board").style.display = "block";
+  gameBoard.style.display = "block";
 });

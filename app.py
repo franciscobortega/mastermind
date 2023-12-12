@@ -65,16 +65,22 @@ def handle_lobby_message(data):
 @socketio.on('secret_code')
 def handle_secret_code(data):
     room = session.get('room')
+    name = session.get('name')
     if room not in rooms:
         return
     content = {
-        "name": session.get('name'),
+        "name": name,
         "secret_code": data["code"],
     }
-    # send(content, to=room)
-    rooms[room]["secret_code"] = content["secret_code"]
-    print(rooms)
-    print(f"{session.get('name')} set the secret code to {content['secret_code']}")
+    emit("set_code", content, to=request.sid)
+    print(f"{name} set the secret code to {content['secret_code']}")
+
+    chat_message = "The secret code has been set!"
+    chat_content = {
+        "name": "Server",
+        "message": chat_message,
+    }
+    emit("message", chat_content, to=room)
 
 @socketio.on('multiplayer_guess')
 def handle_multiplayer_guess(data):

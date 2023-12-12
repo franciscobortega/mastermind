@@ -61,3 +61,11 @@
   text-align: center;
   font-weight: bold;
 }
+
+#secret-form {
+  display: block;
+}
+
+#display-secret-code {
+  display: none;
+}
