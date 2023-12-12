@@ -25,7 +25,7 @@ endblock %} {% block content %}
   </form>
   <button id="start-game-btn" onclick="startGame()">Start Game</button>
   {% else %}
-  <p>Waiting for codemaker to set the secret code...</p>
+  <p>Waiting for codemaker to start the game...</p>
   {% endif %}
 </div>
 
@@ -59,12 +59,12 @@ endblock %} {% block content %}
       Send Code
     </button>
   </form>
-  {% endif %}
-
+  {% else %}
   <p>
     You have {{num_attempts}} attempts to guess the 4-digit code (0-7). Good
     luck!
   </p>
+  {% endif %}
 
   <div class="attempts-container">
     <ul class="guesses-container">
@@ -86,7 +86,28 @@ endblock %} {% block content %}
   {% elif user_role == 'codemaker' %}
   <form id="feedback-form">
     <label for="feedback-input">Enter your feedback: </label>
-    <input type="text" name="feedback" id="feedback-input" required />
+    <label for="feedback-input">
+      <input
+        type="number"
+        name="feedback"
+        id="feedback-input"
+        min="0"
+        max="4"
+        required
+      />
+      correct number(s)
+    </label>
+    <label for="feedback-input">
+      <input
+        type="number"
+        name="feedback"
+        id="feedback-input"
+        min="0"
+        max="4"
+        required
+      />
+      correct location(s)
+    </label>
     <button
       type="button"
       name="feedback"
