@@ -4,6 +4,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, send
 from random import randint, choice
 from string import ascii_uppercase
 from model import connect_to_db, db
+import crud
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -276,6 +277,9 @@ def check_guess(secret_code, guess):
 def home_screen():
     """Render the home screen."""
     session.clear()
+
+    leaderboard = get_leaderboard()
+
     if request.method == 'POST':
         name = request.form.get('name')
         code = request.form.get('code')
@@ -310,7 +314,7 @@ def home_screen():
 
         return redirect(url_for('load_game_room'))
         
-    return render_template('index.html')
+    return render_template('index.html', leaderboard=leaderboard)
 
 @app.route('/start_single')
 def start_single_game():
@@ -402,6 +406,15 @@ def evaluate_guess():
 def end_game():
     """End the game."""
     pass
+
+def get_leaderboard():
+    """Get database data for leaderboard."""
+
+    top_players = crud.get_top_players()
+
+    print(top_players)
+
+    return top_players
 
 if __name__ == '__main__':
     connect_to_db(app)

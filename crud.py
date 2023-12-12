@@ -24,6 +24,11 @@ def get_user_by_username(username):
 
     return User.query.filter(User.username == username).first()
 
+def get_top_players():
+    """Return top players."""
+
+    return User.query.order_by(User.total_wins.desc()).limit(3).all()
+
 if __name__ == '__main__':
     from app import app
     connect_to_db(app)

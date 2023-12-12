@@ -52,5 +52,12 @@ block content %}
 {% if error %}
 <p>{{error}}</p>
 {% endif %}
-<!-- <script src="static/js/app.js"></script> -->
+<div class="leaderboard-container">
+  <h2>Total Wins Leaderboard</h2>
+  <ol class="leaderboard">
+    {% for player in leaderboard %}
+    <li>{{ player.username }} - {{ player.total_wins }} wins</li>
+    {% endfor %}
+  </ol>
+</div>
 {% endblock %}
