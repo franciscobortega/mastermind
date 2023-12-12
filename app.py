@@ -186,27 +186,28 @@ def generate_room_code(length):
 def generate_secret_code():
     """Generate a random 4-digit secret code."""
     
-    # base_url = "https://www.random.org/integers/"
+    # code = []
 
-    # payload = {'num': 4,
-    #            'min': 0,
-    #            'max': 7,
-    #            'col': 1,
-    #            'base': 10,
-    #            'format': 'plain',
-    #            'rnd': 'new'}
+    # for _ in range(4):
+    #     code.append(randint(0,7))
 
-    # response = requests.get(base_url, params=payload)
+    base_url = "https://www.random.org/integers/"
 
-    # print(response.text) # prints plain text response, with one integer per line.
+    payload = {'num': 4,
+               'min': 0,
+               'max': 7,
+               'col': 1,
+               'base': 10,
+               'format': 'plain',
+               'rnd': 'new'}
 
-    code = []
+    response = requests.get(base_url, params=payload)
 
-    for _ in range(4):
-        code.append(randint(0,7))
+    code = [ int(x) for x in response.text.split('\n')[0:4]]
 
+    print(f"generated: {code}")
 
-    return code 
+    return code
 
 def check_guess(secret_code, guess):
     """Evaluate the player's guess."""
