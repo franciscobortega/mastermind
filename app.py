@@ -110,7 +110,8 @@ def handle_multiplayer_guess(data):
     room = session.get('room')
     name = session.get('name')
     mode = session.get('mode')
-    secret_code = rooms[room]["secret_code"]
+    if mode == 'battle-royale':
+        secret_code = rooms[room]["secret_code"]
 
     if room not in rooms:
         return
