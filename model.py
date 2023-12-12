@@ -16,8 +16,6 @@ class User(db.Model):
     password = db.Column(db.String)
     total_wins = db.Column(db.Integer, default=0)
 
-    routes = db.relationship("Route", back_populates="user")
-
     def __repr__(self):
         return f'<User user_id={self.user_id} username={self.username}>'
     
