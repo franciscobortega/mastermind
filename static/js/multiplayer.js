@@ -11,13 +11,14 @@ const gameBoard = document.getElementById("game-board");
  * @param {string} msg - The message content to be displayed.
  */
 const createMessage = (name, msg) => {
-  const content = `
-  <div class="message">
-    <span>${name}: ${msg}</span>
-  </div>
-  `;
+  const messageContainer = document.createElement("div");
+  messageContainer.classList.add("message");
 
-  messages.innerHTML += content;
+  const messageContent = document.createElement("span");
+  messageContent.textContent = `${name}: ${msg}`;
+
+  messageContainer.appendChild(messageContent);
+  messages.appendChild(messageContainer);
 };
 
 /**
