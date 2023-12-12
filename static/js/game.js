@@ -36,11 +36,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function displayFeedback(guess, feedback) {
     // Create a new list item element for the feedback history
-    let newFeedbackItem = document.createElement("li");
-    newFeedbackItem.textContent = `You guessed [${guess}]: ${feedback}`;
+    const guessesContainer = document.querySelector(".guesses-container");
+
+    const guessElement = document.createElement("li");
+    guessElement.textContent = guess;
+
+    guessesContainer.appendChild(guessElement);
 
     // Append the new list item to the feedback container
-    let feedbackContainer = document.querySelector(".feedback-container");
-    feedbackContainer.appendChild(newFeedbackItem);
+
+    const feedbackContainer = document.querySelector(".feedback-container");
+
+    const feedbackElement = document.createElement("li");
+    feedbackElement.textContent = feedback;
+
+    feedbackContainer.appendChild(feedbackElement);
   }
 });

@@ -120,10 +120,10 @@ socket.on("update_feedback", (data) => {
 
   const feedbackContainer = document.querySelector(".feedback-container");
 
-  const guessElement = document.createElement("li");
-  guessElement.textContent = `${data["feedback-numbers"]} correct numbers, ${data["feedback-locations"]} correct locations.`;
+  const feedbackElement = document.createElement("li");
+  feedbackElement.textContent = `${data["feedback-numbers"]} correct numbers, ${data["feedback-locations"]} correct locations.`;
 
-  feedbackContainer.appendChild(guessElement);
+  feedbackContainer.appendChild(feedbackElement);
 });
 
 const startGame = () => {

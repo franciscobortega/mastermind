@@ -283,6 +283,12 @@ def home_screen():
 @app.route('/start_single')
 def start_single_game():
     """Start a single-player game."""
+    global game_over, num_attempts, guessed
+
+    num_attempts = 10;
+    game_over = False;
+    guessed = False;
+    
     # Generate a random 4-digit code
     code = generate_secret_code()
 

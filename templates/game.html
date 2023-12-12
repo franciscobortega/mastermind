@@ -1,10 +1,23 @@
-{% extends 'base.html' %} {% block title %}MasterMind - Singleplayer{% endblock
-%} {% block content %}
-<h1>Welcome to MasterMind!</h1>
+{% extends 'base.html' %} {% block title %}Singleplayer{% endblock %} {% block
+content %}
+<h1>Welcome to MasterMind - Singleplayer!</h1>
 <p>{{code}}</p>
 <p>
   You have {{num_attempts}} attempts to guess the 4-digit code (0-7). Good luck!
 </p>
+<form action="/">
+  <input type="submit" value="Leave Game" />
+</form>
+
+<div class="attempts-container">
+  <ul class="guesses-container">
+    <li class="guesses title">Guesses</li>
+  </ul>
+  <ul class="feedback-container">
+    <li class="feedback title">Feedback</li>
+  </ul>
+</div>
+
 <form id="guess-form">
   <label for="guess-input">Enter your guess (e.g., 0123): </label>
   <input type="hidden" id="secret-code" name="secret_code" value="{{ code }}" />
@@ -18,13 +31,6 @@
   />
   <input type="submit" />
 </form>
-<div>
-  <ul class="feedback-container">
-    <li class="feedback">Feedback</li>
-  </ul>
-</div>
-<form action="/">
-  <input type="submit" value="Leave Game" />
-</form>
+
 <script src="static/js/game.js"></script>
 {% endblock %}
