@@ -84,7 +84,7 @@ I started Day 1 by reviewing the requirements and getting familiar with the Mast
 
 I designed the following user flow diagram to ensure that I had a thorough understanding of the core game logic and that any future enhancements would not deviate from the expected behavior of the game:
 
-![User flow diagram for core game logic](mastermind.png)
+![User flow diagram for core game logic](images/mastermind.png)
 
 I finished Day 1 by simply setting up my coding environment and completing a console-based version of Mastermind to validate my understanding of the core game logic.
 
@@ -94,7 +94,7 @@ The majority of Day 2 was spent implementing Mastermind as a Flask application. 
 
 I finished Day 2 by designing the following data model for the backend within the context of the existing single player solution and reasonably considered enhancements I wanted for the final product:
 
-![Data Model for mastermind game](mastermind-data-model.png)
+![Data Model for mastermind game](images/mastermind-data-model.png)
 
 ### Day 3
 
