@@ -9,6 +9,17 @@ class TestCheckGuess(unittest.TestCase):
         guessed = False
         num_attempts = 10 
     
+    def test_guess_less_than_four_digits(self):
+        secret_code = [1, 2, 3, 4]
+        guess = [1, 2, 3]
+        result = check_guess(secret_code, guess)
+        self.assertEqual(result, "Please enter a 4-digit guess.")
+    
+    def test_guess_more_than_four_digits(self):
+        secret_code = [1, 2, 3, 4]
+        guess = [1, 2, 3, 4, 5]
+        result = check_guess(secret_code, guess)
+        self.assertEqual(result, "Please enter a 4-digit guess.")
 
     def test_guess_all_incorrect(self):
         secret_code = [1, 2, 3, 4]
