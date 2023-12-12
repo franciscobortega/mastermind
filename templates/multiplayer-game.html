@@ -5,7 +5,7 @@ endblock %} {% block content %}
 <div id="lobby-options">
   <p>You are in the {{mode}} lobby!</p>
 
-  {% if user_role == 'codemaker' %}
+  {% if mode == 'multiplayer' %} {% if user_role == 'codemaker' %}
   <form id="lobby-form">
     <label for="codelength-input">Code Length: </label>
     <input
@@ -27,6 +27,9 @@ endblock %} {% block content %}
   <button id="start-game-btn" onclick="startGame()">Start Game</button>
   {% else %}
   <p>Waiting for codemaker to start the game...</p>
+  {% endif %} {% else %}
+  <p>You can play with up to 6 players in battle royale...</p>
+  <button id="start-game-btn" onclick="startBattle()">Start Game</button>
   {% endif %}
 </div>
 
