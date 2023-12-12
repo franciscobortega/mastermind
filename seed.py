@@ -12,14 +12,36 @@ def seed_database():
     model.connect_to_db(app)
     model.db.create_all()
 
-    # --------------- Seed user --------------- #
-    username = 'bryanortega'
-    password = '1234'
-    total_wins = 100
+    # --------------- Users --------------- #
 
-    # create and add new user to db
-    new_user = crud.create_user(username, password, total_wins)
-    model.db.session.add(new_user)
+    user_data = [
+        {
+            'username': 'mastermind',
+            'password': 'game',
+            'total_wins': 1000
+        },
+        {
+            'username': 'bulls-and-cows',
+            'password': 'og',
+            'total_wins': 100
+        },
+        {
+            'username': 'mordecai_meirowitz',
+            'password': 'inventor',
+            'total_wins': 99
+        },
+        
+    ]
+
+    # --------------- Seed users --------------- #
+    for user in user_data:
+        username = user['username']
+        password = user['password']
+        total_wins = user['total_wins']
+
+        # create and add new user to db
+        new_user = crud.create_user(username, password, total_wins)
+        model.db.session.add(new_user)
 
     model.db.session.commit()
 
