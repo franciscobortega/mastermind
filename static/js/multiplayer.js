@@ -26,7 +26,7 @@ const createMessage = (name, msg, role) => {
       messageContent.style.color = "blue";
       break;
     default:
-      messageContent.style.backgroundColor = "#ccc";
+      messageContent.style.backgroundColor = "#ebebeb";
       break;
   }
 
@@ -84,6 +84,17 @@ const sendGuess = () => {
   socket.emit("multiplayer_guess", { guess: guessInput.value });
   guessInput.value = "";
 };
+
+socket.on("update_guesses", (data) => {
+  console.log(`${data["name"]} guessed: ${data["guess"]}`);
+
+  const guessesContainer = document.querySelector(".guesses-container");
+
+  const guessElement = document.createElement("li");
+  guessElement.textContent = `${data["name"]} guessed: ${data["guess"]}`;
+
+  guessesContainer.appendChild(guessElement);
+});
 
 /**
  * Sends feedback to the server using WebSocket.

@@ -96,16 +96,24 @@ def handle_secret_code(data):
 @socketio.on('multiplayer_guess')
 def handle_multiplayer_guess(data):
     room = session.get('room')
+    name = session.get('name')
     if room not in rooms:
         return
     content = {
-        "name": session.get('name'),
+        "name": name,
         "guess": data["guess"],
     }
-    # send(content, to=room)
+    emit("update_guesses", content, to=room)
     rooms[room]["guess"] = content["guess"]
     print(rooms)
-    print(f"{session.get('name')} guessed: {content['guess']}")
+    print(f"{name} guessed: {content['guess']}")
+
+    chat_message = f"{name} made their guess!"
+    chat_content = {
+        "name": "Server",
+        "message": chat_message,
+    }
+    emit("message", chat_content, to=room)
 
 @socketio.on('multiplayer_feedback')
 def handle_multiplayer_feedback(data):
