@@ -213,7 +213,8 @@ def check_guess(secret_code, guess):
     global game_over, num_attempts, guessed
 
     # Convert user's guess and secret code into lists
-    guess = [int(x) for x in guess]
+    if not isinstance(guess, list):
+        guess = [int(x) for x in guess]
     #TODO: secret code is being converted into a string at some point between the client-server or server-client transmissions.
     # potentially store server-side via as a session variable or as part of the database
     if not isinstance(secret_code, list):
@@ -245,12 +246,18 @@ def check_guess(secret_code, guess):
     correct_numbers = 0
     correct_locations = 0
 
-    # print(guess, secret_code)
+    print(guess, secret_code)
 
-    for index, num in enumerate(guess):
-        if num in secret_code:
+    secret_code_copy = secret_code.copy()
+
+    # Check for correct numbers 
+    for num in guess:
+        if num in secret_code_copy:
             correct_numbers += 1
+            secret_code_copy.remove(num)
 
+    # Check for correct locations
+    for index, num in enumerate(guess):
         if num == secret_code[index]:
             correct_locations += 1
 
