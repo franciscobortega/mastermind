@@ -23,6 +23,10 @@ def handle_connect(auth):
         leave_room(room)
         return
     
+    if len(rooms[room]["participants"]) >= 2:
+        # If there are already 2 players in the room, reject the new player's connection
+        return redirect(url_for('home_screen'))
+    
     join_room(room)
     send({"name": name, "message": "has entered the room."}, to=room)
     rooms[room]["members"] += 1
@@ -288,7 +292,7 @@ def start_single_game():
     num_attempts = 10;
     game_over = False;
     guessed = False;
-    
+
     # Generate a random 4-digit code
     code = generate_secret_code()
 
@@ -301,6 +305,10 @@ def load_game_room():
     name = session.get("name")
     
     if room is None or session.get("name") is None or room not in rooms:
+        return redirect(url_for('home_screen'))
+    
+    if len(rooms[room]["participants"]) >= 2:
+        # If there are already 2 players in the room, reject the new player's connection
         return redirect(url_for('home_screen'))
 
     user_role = None
