@@ -91,7 +91,7 @@ socket.on("update_guesses", (data) => {
   const guessesContainer = document.querySelector(".guesses-container");
 
   const guessElement = document.createElement("li");
-  guessElement.textContent = `${data["name"]} guessed: ${data["guess"]}`;
+  guessElement.textContent = data["guess"];
 
   guessesContainer.appendChild(guessElement);
 });
@@ -100,12 +100,31 @@ socket.on("update_guesses", (data) => {
  * Sends feedback to the server using WebSocket.
  */
 const sendFeedback = () => {
-  const feedbackInput = document.getElementById("feedback-input");
+  const feedbackNumbersInput = document.getElementById("feedback-nums-input");
+  const feedbackLocationsInput = document.getElementById("feedback-locs-input");
 
-  if (feedbackInput.value === "") return;
-  socket.emit("multiplayer_feedback", { feedback: feedbackInput.value });
-  feedbackInput.value = "";
+  if (feedbackNumbersInput.value === "" || feedbackLocationsInput.value === "")
+    return;
+  socket.emit("multiplayer_feedback", {
+    feedback_numbers: feedbackNumbersInput.value,
+    feedback_locations: feedbackLocationsInput.value,
+  });
+  feedbackNumbersInput.value = "";
+  feedbackLocationsInput.value = "";
 };
+
+socket.on("update_feedback", (data) => {
+  console.log(
+    `${data["name"]} said: ${data["feedback-numbers"]} correct numbers, ${data["feedback-locations"]} correct locations.`
+  );
+
+  const feedbackContainer = document.querySelector(".feedback-container");
+
+  const guessElement = document.createElement("li");
+  guessElement.textContent = `${data["feedback-numbers"]} correct numbers, ${data["feedback-locations"]} correct locations.`;
+
+  feedbackContainer.appendChild(guessElement);
+});
 
 const startGame = () => {
   socket.emit("start_game");

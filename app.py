@@ -77,12 +77,15 @@ def handle_lobby_message(data):
 def handle_secret_code(data):
     room = session.get('room')
     name = session.get('name')
+
     if room not in rooms:
         return
+    
     content = {
         "name": name,
         "secret_code": data["code"],
     }
+
     emit("set_code", content, to=request.sid)
     print(f"{name} set the secret code to {content['secret_code']}")
 
@@ -97,12 +100,15 @@ def handle_secret_code(data):
 def handle_multiplayer_guess(data):
     room = session.get('room')
     name = session.get('name')
+
     if room not in rooms:
         return
+    
     content = {
         "name": name,
         "guess": data["guess"],
     }
+
     emit("update_guesses", content, to=room)
     rooms[room]["guess"] = content["guess"]
     print(rooms)
@@ -118,16 +124,28 @@ def handle_multiplayer_guess(data):
 @socketio.on('multiplayer_feedback')
 def handle_multiplayer_feedback(data):
     room = session.get('room')
+    name = session.get('name')
+
     if room not in rooms:
         return
+    
     content = {
-        "name": session.get('name'),
-        "feedback": data["feedback"],
+        "name": name,
+        "feedback-numbers": data['feedback_numbers'],
+        "feedback-locations": data['feedback_locations']
     }
-    # send(content, to=room)
-    rooms[room]["feedback"] = content["feedback"]
+
+    emit("update_feedback", content, to=room)
+    rooms[room]["feedback"] = f"{content['feedback-numbers']} correct numbers, {content['feedback-locations']} correct locations."
     print(rooms)
-    print(f"{session.get('name')} gave feedback: {content['feedback']}")
+    print(f"{name} gave feedback: {content['feedback-numbers']} correct numbers, {content['feedback-locations']} correct locations.")
+
+    chat_message = f"{name} provided feedback!"
+    chat_content = {
+        "name": "Server",
+        "message": chat_message,
+    }
+    emit("message", chat_content, to=room)
 
 # constant and global variables
 num_attempts = 10
