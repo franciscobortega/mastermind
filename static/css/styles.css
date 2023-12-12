@@ -4,6 +4,15 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+h1,
+h2 {
+  text-align: center;
+}
+
 .game-options {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
