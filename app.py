@@ -13,6 +13,8 @@ def handle_connect(auth):
     name = session.get('name')
     unique_id = request.sid
 
+    print(f"{name} connected to room {room}")
+
     if not room or not name:
         return
     if room not in rooms:
@@ -35,36 +37,18 @@ def handle_connect(auth):
             "name": name,
             "role": "codebreaker"
         })
-
-    print(f"{name} joined room {room}")
-    print(rooms[room]["participants"])
     print(rooms)
-
-
 
 @socketio.on('disconnect')
 def handle_disconnect():
     room = session.get('room')
     name = session.get('name')
-    unique_id = request.sid
 
     leave_room(room)
 
-    if room in rooms:
-        if unique_id in rooms[room]["participants"]:
-            rooms[room]["participants"].remove(unique_id)
-
-        rooms[room]["members"] -= 1
-        if rooms[room]["members"] <= 0:
-            del rooms[room]
-
-    print(rooms)
-
-    
     send({"name": name, "message": "has left the room."}, to=room)
     print(f"{name} has left room {room}")
 
-# TESTING WEBSOCKET
 @socketio.on('lobby_message')
 def handle_lobby_message(data):
     room = session.get('room')
@@ -231,7 +215,6 @@ def home_screen():
         session["room"] = room
         session["name"] = name
 
-        # return redirect(url_for('load_lobby'))
         return redirect(url_for('load_game_room'))
         
     return render_template('index.html')
@@ -244,55 +227,34 @@ def start_single_game():
 
     return render_template('game.html', code=code, num_attempts=num_attempts)
 
-@socketio.on('redirect_multi_game')
-def redirect_multiplayer_game():
-    """Redirect players to multiplayer game."""
-    room = session.get("room")
-    
-    # validate that 2 players are in the lobby
-    participants = rooms[room]["participants"]  # Get session IDs of participants
-
-    print(participants)
-
-    if len(participants) != 2:
-        print("Not enough participants")
-        # Redirect logic when not enough participants
-        return redirect(url_for('home_screen'))
-
-    for participant in participants:
-        # leave_room(room, participant)  # Leave the player from the lobby room
-        join_room("game_room", participant)  # Move players to the game room
-        print(rooms)
-
-    session["room"] = "game_room"
- 
-    emit('redirect_game_room', room="game_room", to=room)
-
 @app.route('/game_room')
 def load_game_room():
     """Display game room for a multiplayer game."""
     room = session.get("room")
-    print("the redirected room is: ", room)
+    name = session.get("name")
+    
     if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for('home_screen'))
 
     user_role = None
-    if "participants" in rooms[room]:
-        for participant in rooms[room]["participants"]:
-                user_role = participant["role"]
-                break
+    if len(rooms[room]["participants"]) == 0:
+        user_role = 'codemaker'
+        print(user_role)
+    else:
+        user_role = 'codebreaker'
+        print(user_role)
 
-    return render_template("multiplayer-game.html", num_attempts=num_attempts, code=room, user_role=user_role)
 
-@app.route('/lobby')
-def load_lobby():
-    """Display lobby for multiplayer game."""
+    return render_template("multiplayer-game.html", num_attempts=num_attempts, code=room, user_role=user_role, name=name)
+
+@socketio.on('start_game')
+def handle_start_game():
     room = session.get("room")
+    print(room)
     if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for('home_screen'))
-    
 
-    return render_template('lobby.html', code=room)
+    emit('update_room', to=room)
 
 @app.route('/guess', methods=['POST'])
 def evaluate_guess():

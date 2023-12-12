@@ -17,3 +17,11 @@
   align-items: center;
   gap: 10px;
 }
+
+#game-board {
+  display: none;
+}
+
+#lobby-options {
+  display: block;
+}

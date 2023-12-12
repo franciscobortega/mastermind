@@ -1,74 +1,107 @@
 {% extends 'base.html' %} {% block title %}MasterMind - Multiplayer Game{%
 endblock %} {% block content %}
-<h1>Welcome to MasterMind!</h1>
-<div id="players-container">
-  <p>Players</p>
+<h1>Welcome to MasterMind, {{ name }}, the {{ user_role }}!</h1>
+<div id="lobby-options">
+  <p>You are in the lobby!</p>
+  <form id="lobby-form">
+    <label for="codelength-input">Code Length: </label>
+    <input
+      type="number"
+      name="codelength"
+      id="codelength-input"
+      value="4"
+      disabled
+    />
+    <label for="attempts-input">Number of Attempts: </label>
+    <input
+      type="number"
+      name="attempts"
+      id="attempts-input"
+      value="10"
+      disabled
+    />
+  </form>
+  <button id="start-game-btn" onclick="startGame()">Start Game</button>
 </div>
-<div id="chat-container">
-  <div class="message-container">
-    <h2>Chat Room: {{ code }}</h2>
-    <div class="messages" id="messages"></div>
-    <div class="inputs" id="inputs">
-      <input
-        type="text"
-        rows="3"
-        placeholder="Message"
-        name="message"
-        id="message"
-      />
-      <button type="button" name="send" id="send-btn" onclick="sendMessage()">
-        Send
-      </button>
-    </div>
+
+<div class="message-container">
+  <h2>Chat Room: {{ code }}</h2>
+  <div class="messages" id="messages"></div>
+  <div class="inputs" id="inputs">
+    <input
+      type="text"
+      rows="3"
+      placeholder="Message"
+      name="message"
+      id="message"
+    />
+    <button type="button" name="send" id="send-btn" onclick="sendMessage()">
+      Send
+    </button>
   </div>
+
+  <form action="/">
+    <input type="submit" value="Leave Game" />
+  </form>
 </div>
 
-<form id="secret-form">
-  <label for="secret-input">Enter the secret code(e.g., 0123): </label>
-  <input type="number" name="secret" id="secret-input" required />
-  <button type="button" name="secret" id="secret-btn" onclick="sendCode()">
-    Send Code
-  </button>
-</form>
+<div id="game-board">
+  <div id="players-container">
+    <p>Players</p>
+    {% if user_role == 'codemaker' %}
+    <p>You are the codemaker!</p>
+    {% else %}
+    <p>You are the codebreaker!</p>
+    {% endif %}
+  </div>
 
-<p>
-  You have {{num_attempts}} attempts to guess the 4-digit code (0-7). Good luck!
-</p>
+  {% if user_role == 'codemaker' %}
+  <form id="secret-form">
+    <label for="secret-input">Enter the secret code(e.g., 0123): </label>
+    <input type="number" name="secret" id="secret-input" required />
+    <button type="button" name="secret" id="secret-btn" onclick="sendCode()">
+      Send Code
+    </button>
+  </form>
+  {% endif %}
 
-<div>
-  <ul class="guesses-container">
-    <li class="guesses">Guesses</li>
-  </ul>
-  <ul class="feedback-container">
-    <li class="feedback">Feedback</li>
-  </ul>
+  <p>
+    You have {{num_attempts}} attempts to guess the 4-digit code (0-7). Good
+    luck!
+  </p>
+
+  <div>
+    <ul class="guesses-container">
+      <li class="guesses">Guesses</li>
+    </ul>
+    <ul class="feedback-container">
+      <li class="feedback">Feedback</li>
+    </ul>
+  </div>
+
+  {% if user_role == 'codebreaker' %}
+  <form id="guess-form">
+    <label for="guess-input">Enter your guess (e.g., 0123): </label>
+    <input type="number" name="guess" id="guess-input" required />
+    <button type="button" name="guess" id="guess-btn" onclick="sendGuess()">
+      Send Guess
+    </button>
+  </form>
+  {% elif user_role == 'codemaker' %}
+  <form id="feedback-form">
+    <label for="feedback-input">Enter your feedback: </label>
+    <input type="text" name="feedback" id="feedback-input" required />
+    <button
+      type="button"
+      name="feedback"
+      id="feedback-btn"
+      onclick="sendFeedback()"
+    >
+      Send Feedback
+    </button>
+  </form>
+  {% endif %}
 </div>
-
-<form id="guess-form">
-  <label for="guess-input">Enter your guess (e.g., 0123): </label>
-  <input type="number" name="guess" id="guess-input" required />
-  <button type="button" name="guess" id="guess-btn" onclick="sendGuess()">
-    Send Guess
-  </button>
-</form>
-
-<form id="feedback-form">
-  <label for="feedback-input">Enter your feedback: </label>
-  <input type="text" name="feedback" id="feedback-input" required />
-  <button
-    type="button"
-    name="feedback"
-    id="feedback-btn"
-    onclick="sendFeedback()"
-  >
-    Send Feedback
-  </button>
-</form>
-
-<form action="/">
-  <input type="submit" value="Leave Game" />
-</form>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
 <script src="static/js/multiplayer.js"></script>
 {% endblock %}
