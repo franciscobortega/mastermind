@@ -3,7 +3,7 @@ endblock %} {% block content %}
 <h1>Welcome to MasterMind, {{ name }}!</h1>
 <h2>You are the {{ user_role }}!</h2>
 <div id="lobby-options">
-  <p>You are in the lobby!</p>
+  <p>You are in the {{mode}} lobby!</p>
 
   {% if user_role == 'codemaker' %}
   <form id="lobby-form">

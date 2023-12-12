@@ -13,6 +13,7 @@ socketio = SocketIO(app)
 def handle_connect(auth):
     room = session.get('room')
     name = session.get('name')
+    mode = session.get('mode')
     unique_id = request.sid
 
     print(f"{name} connected to room {room}")
@@ -31,7 +32,7 @@ def handle_connect(auth):
     send({"name": name, "message": "has entered the room."}, to=room)
     rooms[room]["members"] += 1
 
-    if len(rooms[room]["participants"]) == 0:
+    if len(rooms[room]["participants"]) == 0 and mode == "multiplayer":
         rooms[room]["participants"].append({
             "player_id": unique_id,
             "name": name,
@@ -258,6 +259,7 @@ def home_screen():
         code = request.form.get('code')
         join = request.form.get('join', False)
         create = request.form.get('create', False)
+        mode = request.form.get('mode')
 
         if not name:
             return render_template('index.html', error="Please enter a name.", code=code, name=name)
@@ -268,14 +270,18 @@ def home_screen():
         room = code
 
         if create != False:
-            room = generate_room_code(4)
-            # room = 'lobby' # for testing purposes
-            rooms[room] = {"members": 0, "messages": [], "participants": []}
+            if mode == "battle-royale":
+                room = 'battle-royale'
+                rooms[room] = {"members": 0, "messages": [], "participants": []}
+            elif mode == "multiplayer":
+                room = generate_room_code(4)
+                rooms[room] = {"members": 0, "messages": [], "participants": []}
         elif code not in rooms:
             return render_template('index.html', error="Room does not exist.", code=code, name=name)
 
         session["room"] = room
         session["name"] = name
+        session["mode"] = mode
 
         # set roles in session
         print(session)
@@ -303,6 +309,7 @@ def load_game_room():
     """Display game room for a multiplayer game."""
     room = session.get("room")
     name = session.get("name")
+    mode = session.get("mode")
     
     if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for('home_screen'))
@@ -312,7 +319,7 @@ def load_game_room():
         return redirect(url_for('home_screen'))
 
     user_role = None
-    if len(rooms[room]["participants"]) == 0:
+    if len(rooms[room]["participants"]) == 0 and mode == "multiplayer":
         user_role = 'codemaker'
         print(user_role)
     else:
@@ -320,7 +327,7 @@ def load_game_room():
         print(user_role)
 
 
-    return render_template("multiplayer-game.html", num_attempts=num_attempts, code=room, user_role=user_role, name=name)
+    return render_template("multiplayer-game.html", num_attempts=num_attempts, code=room, user_role=user_role, name=name, mode=mode)
 
 @socketio.on('start_game')
 def handle_start_game():
@@ -345,12 +352,6 @@ def evaluate_guess():
 
     # Return feedback as JSON
     return jsonify({'feedback': feedback})
-
-@socketio.on('player_move')
-def handle_player_move(data):
-    move = data['move']  # Move made by the player
-
-    print(move)
 
 @app.route('/end', methods=['POST'])
 def end_game():
