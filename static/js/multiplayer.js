@@ -66,12 +66,16 @@ const sendCode = () => {
 socket.on("set_code", (data) => {
   console.log(`secret code: ${data["secret_code"]}`);
 
-  const secretCodeElement = document.getElementById("display-secret-code");
-  secretCodeElement.textContent = `The secret code is: ${data["secret_code"]}`;
-  secretCodeElement.style.display = "block";
+  if (data["mode"] == "multiplayer") {
+    const secretCodeElement = document.getElementById("display-secret-code");
+    secretCodeElement.textContent = `The secret code is: ${data["secret_code"]}`;
+    secretCodeElement.style.display = "block";
 
-  const secretForm = document.getElementById("secret-form");
-  secretForm.remove();
+    const secretForm = document.getElementById("secret-form");
+    secretForm.remove();
+  } else {
+    console.log(data["secret_code"]);
+  }
 });
 
 /**
@@ -126,8 +130,22 @@ socket.on("update_feedback", (data) => {
   feedbackContainer.appendChild(feedbackElement);
 });
 
+socket.on("guess_feedback", (feedback) => {
+  console.log(feedback);
+  const feedbackContainer = document.querySelector(".feedback-container");
+
+  const feedbackElement = document.createElement("li");
+  feedbackElement.textContent = feedback;
+
+  feedbackContainer.appendChild(feedbackElement);
+});
+
 const startGame = () => {
   socket.emit("start_game");
+};
+
+const startBattle = () => {
+  socket.emit("start_battle_royale");
 };
 
 socket.on("update_room", () => {

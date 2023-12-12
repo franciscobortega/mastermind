@@ -84,12 +84,14 @@ def handle_lobby_message(data):
 def handle_secret_code(data):
     room = session.get('room')
     name = session.get('name')
+    mode = session.get('mode')
 
     if room not in rooms:
         return
     
     content = {
         "name": name,
+        "mode": mode,
         "secret_code": data["code"],
     }
 
@@ -107,6 +109,8 @@ def handle_secret_code(data):
 def handle_multiplayer_guess(data):
     room = session.get('room')
     name = session.get('name')
+    mode = session.get('mode')
+    secret_code = rooms[room]["secret_code"]
 
     if room not in rooms:
         return
@@ -115,8 +119,13 @@ def handle_multiplayer_guess(data):
         "name": name,
         "guess": data["guess"],
     }
+    if mode == "multiplayer":
+        emit("update_guesses", content, to=room)
+    else:
+        emit("update_guesses", content, to=request.sid)
+        guess_feedback = check_guess(secret_code, content['guess'])
+        emit("guess_feedback", guess_feedback, to=request.sid)
 
-    emit("update_guesses", content, to=room)
     rooms[room]["guess"] = content["guess"]
     print(rooms)
     print(f"{name} guessed: {content['guess']}")
@@ -206,8 +215,9 @@ def check_guess(secret_code, guess):
     guess = [int(x) for x in guess]
     #TODO: secret code is being converted into a string at some point between the client-server or server-client transmissions.
     # potentially store server-side via as a session variable or as part of the database
-    secret_code = secret_code.strip('][').split(', ')
-    secret_code = [int(x) for x in secret_code]
+    if not isinstance(secret_code, list):
+        secret_code = secret_code.strip('][').split(', ')
+        secret_code = [int(x) for x in secret_code]
 
     # Validate the user's guess input
     # TODO: make sure that the user's guess falls within the expected range
@@ -272,7 +282,7 @@ def home_screen():
         if create != False:
             if mode == "battle-royale":
                 room = 'battle-royale'
-                rooms[room] = {"members": 0, "messages": [], "participants": []}
+                rooms[room] = {"members": 0, "messages": [], "participants": [], "secret_code": generate_secret_code()}
             elif mode == "multiplayer":
                 room = generate_room_code(4)
                 rooms[room] = {"members": 0, "messages": [], "participants": []}
@@ -337,6 +347,29 @@ def handle_start_game():
         return redirect(url_for('home_screen'))
 
     emit('update_room', to=room)
+
+@socketio.on('start_battle_royale')
+def handle_start_battle_royale():
+    room = session.get("room")
+    mode = session.get("mode")
+    print(room)
+    if room is None or session.get("name") is None or room not in rooms:
+        return redirect(url_for('home_screen'))
+
+    emit('update_room', to=room)
+
+    secret_code  = rooms[room]["secret_code"]
+
+    content = {
+        "mode": mode,
+        "secret_code": secret_code,
+    }
+
+    # session["secret_code"] = secret_code
+    # print(session)
+
+    emit('set_code', content, to=room)
+
 
 @app.route('/guess', methods=['POST'])
 def evaluate_guess():
