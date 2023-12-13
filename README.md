@@ -1,12 +1,12 @@
-# <a name="summary"></a> Mastermind Game
+# <a name="overview"></a> Mastermind Game
 
-This is a backend-focused version of the classic Mastermind game.
+This is a multiplayer implementation of the classic code-breaking game, Mastermind. The project was built with Flask and Flask-SocketIO to enable real-time interaction between players. It features various game modes, including singleplayer, multiplayer, and a battle royale mode. Users can communicate in real-time via a chat feature and also compete against each other to have their name on the leaderboard.
 
 </br>
 
 **Table Of Contents**
 
-- [Summary](#summary)
+- [Overview](#overview)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
 - [Installation](#installation)
@@ -15,9 +15,10 @@ This is a backend-focused version of the classic Mastermind game.
 
 ## <a name="tech-stack"></a>Tech Stack
 
-**Frontend:** HTML5, CSS, Javascript <br/>
+**Frontend:** HTML5, CSS3, Javascript <br/>
 **Backend:** Python, Flask, Flask-SocketIO, PostgreSQL, SQLAlchemy <br/>
 **APIs:** Random.org <br/>
+**Testing:** unittest module <br/>
 
 ## <a name="features"></a> Features
 
@@ -91,6 +92,8 @@ I finished Day 1 by simply setting up my coding environment and completing a con
 ### Day 2
 
 The majority of Day 2 was spent implementing Mastermind as a Flask application. The UI is simple HTML and is unlikely to become anything remarkable. I focused on making the MVP a single-player game with sufficient input validation, guess evaluation, and feedback to relay the experience of playing Mastermind regardless of the lack of UI design elements. I made minimal adjustments to the core game logic in this implementation. Although the game functioned as expected, the need to implement testing as the project became more complex was evident.
+
+![Footage of singleplayer mode](images/mastermind-single-web.gif)
 
 I finished Day 2 by designing the following data model for the backend within the context of the existing single player solution and reasonably considered enhancements I wanted for the final product:
 
