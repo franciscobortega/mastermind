@@ -11,6 +11,7 @@ This is a multiplayer implementation of the classic code-breaking game, Mastermi
 - [Features](#features)
 - [Installation](#installation)
 - [Devlog](#devlog)
+- [Future Enhancements](#enhancements)
 - [About Me](#about-me)
 
 ## <a name="tech-stack"></a>Tech Stack
@@ -93,8 +94,6 @@ I finished Day 1 by simply setting up my coding environment and completing a con
 
 The majority of Day 2 was spent implementing Mastermind as a Flask application. The UI is simple HTML and is unlikely to become anything remarkable. I focused on making the MVP a single-player game with sufficient input validation, guess evaluation, and feedback to relay the experience of playing Mastermind regardless of the lack of UI design elements. I made minimal adjustments to the core game logic in this implementation. Although the game functioned as expected, the need to implement testing as the project became more complex was evident.
 
-![Footage of singleplayer mode](images/mastermind-single-web.gif)
-
 I finished Day 2 by designing the following data model for the backend within the context of the existing single player solution and reasonably considered enhancements I wanted for the final product:
 
 ![Data Model for mastermind game](images/mastermind-data-model.png)
@@ -118,6 +117,22 @@ The event handling between the clients and server was much smoother and by the e
 This game mode has no computer validation for feedback to imitate the real Mastermind game, where the codebreaker at the end can then challenge any feedback they have received. Styling was applied to the UI to help players navigate around the game interface.
 
 ### Day 7
+
+I started this last day by working on the Battle Royale mode. There was a lot of moving parts to this enhancement since multiple players would be interacting with the server and requiring real-time feedback for their guesses. Since the server was responsible for setting the `secret_code`, it was necessary to validate the logic behind the `check_guess` function. I implemented unit testing for this function specifically and revealed some edge cases where my previous algorithm failed. With this function updated, I was finally able to implement endgame logic to finish a game.
+
+The next enhancement I built was a leaderboard. To build a functional leaderboard, I first needed to set up my PostgreSQL database and seed it with some user data that I could pass onto the leaderboard. Due to time constraints, I had to dial back on the full data model and only implement enough to satisfy the needs of the app at the time being. However, with this data model and CRUD operations in place, it was now feasible to have some persistance in the app and improve the player experience across the different game modes.
+
+Unfortunately, there was a lot of features that I did not have time to implement. There is a lot of loose ends throughout the app that I have identified but do not have enough time to try and add/resolve without the risk of breaking things. Some are minor nice-to-haves, such as accounts with user authentication or alternative leaderboards, and others are bothersome side-effects from early decisions on how to handle events, data, interactions, etc.
+
+## <a name="enhancements"></a> Future Enhancements
+
+Below is a list of features that I would be interested in completing or implementing in the future.
+
+- User authentication and authorization
+- Time-trial mode for singleplayer mode with leaderboard
+- Multiple rounds for games
+- Point system based on game score, attempts, correct number/location ratio, etc.
+- Tutorial mode
 
 ## <a name="about-me"></a> About me
 
