@@ -63,14 +63,28 @@ def handle_connect(auth):
         })
     print(rooms)
 
+disconnected_rooms = {}
+
 @socketio.on('disconnect')
 def handle_disconnect():
+    # TODO: fix bug where multiple games try to disconnect players from other rooms
+    # e.g. if two players are playing multiplayer and other players are playing battle-royale, the battle royale players
+    # will be unable to trigger the postgame sequence since there is no logic in place to check the game mode 
     room = session.get('room')
     name = session.get('name')
 
     leave_room(room)
 
     send({"name": name, "message": "has left the room."}, to=room)
+    rooms[room]["members"] -= 1
+
+    # persist data from disconnected room for later use
+    disconnected_rooms[room] = rooms[room]
+
+    # Close the room if there are no more players in it
+    if rooms[room]["members"] == 0:
+        del rooms[room]
+
     print(f"{name} has left room {room}")
 
 @socketio.on('lobby_message')
@@ -305,7 +319,7 @@ def check_guess(secret_code, guess):
 def home_screen():
     """Render the home screen."""
     session.clear()
-
+    disconnected_rooms = {}
     error = request.args.get('error', None)
 
     leaderboard = get_leaderboard()
@@ -328,7 +342,7 @@ def home_screen():
         if create != False:
             if mode == "battle-royale":
                 room = 'battle-royale'
-                if not rooms:
+                if not rooms or 'battle-royale' not in rooms:
                     rooms[room] = {"members": 0, "messages": [], "participants": [], "secret_code": generate_secret_code()}
             elif mode == "multiplayer":
                 room = generate_room_code(4)
@@ -368,7 +382,14 @@ def load_game_room():
     name = session.get("name")
     mode = session.get("mode")
     
-    if room is None or session.get("name") is None or room not in rooms:
+    if room is None:
+        print("No room")
+        return redirect(url_for('home_screen'))
+    if session.get("name") is None:
+        print("name not found")
+        return redirect(url_for('home_screen'))
+    if room not in rooms:
+        print("room not available")
         return redirect(url_for('home_screen'))
     
     if len(rooms[room]["participants"]) >= 2 and mode == "multiplayer":
@@ -447,18 +468,28 @@ def display_postgame():
     room = session.get("room")
     name = session.get("name")
     mode = session.get("mode")
+    final_game_data = disconnected_rooms
 
-    if room is None or session.get("name") is None or room not in rooms:
+    if room is None:
+        print("No room")
         return redirect(url_for('home_screen'))
+    if session.get("name") is None:
+        print("name not found")
+        return redirect(url_for('home_screen'))
+    # if room not in rooms:
+    #     print("room has been deleted")
+    #     print(session)
+    #     print(final_game_data)
+    #     return redirect(url_for('home_screen'))
     
     # collect game data for each player
     game_data = []
 
     print("Endgame printed: ", name)
 
-    players = rooms[room]["participants"] 
+    players = final_game_data[room]["participants"] 
 
-    secret_code = rooms[room]["secret_code"]
+    secret_code = final_game_data[room]["secret_code"]
     
     for player in players:
 
