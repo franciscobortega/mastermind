@@ -10,6 +10,12 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+# constant and global variables
+num_attempts = 10
+game_over = False;
+guessed = False;
+rooms = {}
+
 @socketio.on('connect')
 def handle_connect(auth):
     room = session.get('room')
@@ -37,13 +43,15 @@ def handle_connect(auth):
         rooms[room]["participants"].append({
             "player_id": unique_id,
             "name": name,
-            "role": "codemaker"
+            "role": "codemaker",
+            "winner": False
         })
     else:
         rooms[room]["participants"].append({
             "player_id": unique_id,
             "name": name,
-            "role": "codebreaker"
+            "role": "codebreaker",
+            "winner": False
         })
     print(rooms)
 
@@ -129,6 +137,14 @@ def handle_multiplayer_guess(data):
         guess_feedback = check_guess(secret_code, content['guess'])
 
         if guess_feedback == "You won! You guessed the code correctly!":
+            # update winning player's winner status
+            for player in rooms[room]["participants"]:
+                if player["player_id"] == request.sid:
+                    player["winner"] = True
+                    break
+            
+            print(f"{name} won the battle!")
+
             emit("guess_feedback", guess_feedback, to=request.sid)
             emit("end_battle", to=room)
         else:
@@ -170,12 +186,6 @@ def handle_multiplayer_feedback(data):
         "message": chat_message,
     }
     emit("message", chat_content, to=room)
-
-# constant and global variables
-num_attempts = 10
-game_over = False;
-guessed = False;
-rooms = {}
 
 def generate_room_code(length):
     """Generate a random 4-character room code."""
@@ -304,7 +314,8 @@ def home_screen():
         if create != False:
             if mode == "battle-royale":
                 room = 'battle-royale'
-                rooms[room] = {"members": 0, "messages": [], "participants": [], "secret_code": generate_secret_code()}
+                if not rooms:
+                    rooms[room] = {"members": 0, "messages": [], "participants": [], "secret_code": generate_secret_code()}
             elif mode == "multiplayer":
                 room = generate_room_code(4)
                 rooms[room] = {"members": 0, "messages": [], "participants": []}
@@ -425,6 +436,11 @@ def display_postgame():
     game_data = []
 
     print("Endgame printed: ", name)
+
+    players = rooms[room]["participants"]  # Adjust this according to your data structure
+    
+    for player in players:
+        print(player)
 
     # push player data to database
     player_data = crud.get_user_by_username(name)
