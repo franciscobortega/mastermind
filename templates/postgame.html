@@ -1,8 +1,25 @@
 {% extends 'base.html' %} {% block title %}MasterMind - Postgame{% endblock %}
 {% block content %}
 <h1>Welcome to MasterMind!</h1>
-<p>You are in the {{mode}} postgame lobby!</p>
+<h2>You are in the {{mode}} postgame lobby!</h2>
+<h3>The secret code was: {{ secret_code }}</h3>
+
+<div class="battle-royale-players">
+  <div class="player-container">
+    {% for player in game_data %}
+    <div class="player">
+      <p>{{ player.name }}</p>
+      <ol>
+        {% for guess in player.guesses %}
+        <li>{{ guess }}</li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
 <form action="/">
-  <input type="submit" value="Go Home" />
+  <input type="submit" value="Exit to Home" />
 </form>
 {% endblock %}

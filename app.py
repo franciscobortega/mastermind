@@ -44,6 +44,7 @@ def handle_connect(auth):
             "player_id": unique_id,
             "name": name,
             "role": "codemaker",
+            "guesses": [],
             "winner": False
         })
     else:
@@ -51,6 +52,7 @@ def handle_connect(auth):
             "player_id": unique_id,
             "name": name,
             "role": "codebreaker",
+            "guesses": [],
             "winner": False
         })
     print(rooms)
@@ -150,7 +152,11 @@ def handle_multiplayer_guess(data):
         else:
             emit("guess_feedback", guess_feedback, to=request.sid)
 
-    rooms[room]["guess"] = content["guess"]
+    # Append guess to the player's guesses list
+    for player in rooms[room]["participants"]:
+        if player["player_id"] == request.sid:
+            player["guesses"].append(content["guess"])
+                
     print(rooms)
     print(f"{name} guessed: {content['guess']}")
 
@@ -437,19 +443,29 @@ def display_postgame():
 
     print("Endgame printed: ", name)
 
-    players = rooms[room]["participants"]  # Adjust this according to your data structure
+    players = rooms[room]["participants"] 
+
+    secret_code = rooms[room]["secret_code"]
     
     for player in players:
         print(player)
 
-    # push player data to database
-    player_data = crud.get_user_by_username(name)
+        if player['winner']:
+            # push player data to database
+            player_data = crud.get_user_by_username(name)
 
-    if player_data:
-        player_data.total_wins += 1
-        crud.update_user_score(player_data)
+            if player_data:
+                player_data.total_wins += 1
+                crud.update_user_score(player_data)
 
-    return render_template("postgame.html", mode=mode, name=name, game_data=game_data)
+        game_data.append({
+            "name": player['name'],
+            "guesses": player['guesses'],
+            "winner": player['winner'],
+        })
+
+
+    return render_template("postgame.html", mode=mode, secret_code=secret_code, game_data=game_data)
 
 def get_leaderboard():
     """Get database data for leaderboard."""
