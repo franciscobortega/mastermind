@@ -364,6 +364,7 @@ def load_game_room():
         return redirect(url_for('home_screen'))
     
     if len(rooms[room]["participants"]) >= 2:
+        print("room full")
         # If there are already 2 players in the room, reject the new player's connection
         return redirect(url_for('home_screen'))
 
@@ -448,11 +449,10 @@ def display_postgame():
     secret_code = rooms[room]["secret_code"]
     
     for player in players:
-        print(player)
 
-        if player['winner']:
+        if player['winner'] and player['name'] == name:
             # push player data to database
-            player_data = crud.get_user_by_username(name)
+            player_data = crud.get_user_by_username(player['name'])
 
             if player_data:
                 player_data.total_wins += 1
@@ -463,9 +463,7 @@ def display_postgame():
             "guesses": player['guesses'],
             "winner": player['winner'],
         })
-
-    print(session)
-
+        
     return render_template("postgame.html", mode=mode, secret_code=secret_code, game_data=game_data)
 
 def get_leaderboard():
