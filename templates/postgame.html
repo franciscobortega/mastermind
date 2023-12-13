@@ -2,14 +2,41 @@
 {% block content %}
 <h1>Welcome to MasterMind!</h1>
 <h2>You are in the {{mode}} postgame lobby!</h2>
-<h3>The secret code was: {{ secret_code }}</h3>
 
 <div class="battle-royale-players">
   <div class="player-container">
     {% for player in game_data %}
-    <div class="player">
-      <p>{{ player.name }}</p>
-      <ol>
+    <div
+      {%
+      if
+      player.winner
+      %}
+      class="player winner"
+      {%
+      else
+      %}
+      class="player"
+      {%
+      endif
+      %}
+    >
+      <p
+        {%
+        if
+        player.winner
+        %}
+        class="player-name player-name-winner"
+        {%
+        else
+        %}
+        class="player-name"
+        {%
+        endif
+        %}
+      >
+        {{ player.name }}
+      </p>
+      <ol class="player-guesses">
         {% for guess in player.guesses %}
         <li>{{ guess }}</li>
         {% endfor %}
@@ -19,7 +46,10 @@
   </div>
 </div>
 
-<form action="/">
-  <input type="submit" value="Exit to Home" />
-</form>
+<div class="postgame-footer">
+  <p>The secret code was: {{ secret_code }}</p>
+  <form action="/">
+    <input type="submit" value="Exit to Home" />
+  </form>
+</div>
 {% endblock %}

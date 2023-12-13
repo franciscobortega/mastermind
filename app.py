@@ -464,6 +464,7 @@ def display_postgame():
             "winner": player['winner'],
         })
 
+    print(session)
 
     return render_template("postgame.html", mode=mode, secret_code=secret_code, game_data=game_data)
 
