@@ -31,9 +31,15 @@ def handle_connect(auth):
         leave_room(room)
         return
     
-    if len(rooms[room]["participants"]) >= 2:
+    if len(rooms[room]["participants"]) >= 2 and mode == "multiplayer":
+        print("room full")
         # If there are already 2 players in the room, reject the new player's connection
-        return redirect(url_for('home_screen'))
+        return redirect(url_for('home_screen', error="Room is full."))
+
+    if len(rooms[room]["participants"]) >= 4 and mode == "battle-royale":
+        print("room full")
+        # If there are already 2 players in the room, reject the new player's connection
+        return redirect(url_for('home_screen', error="Room is full."))
     
     join_room(room)
     send({"name": name, "message": "has entered the room."}, to=room)
@@ -300,6 +306,8 @@ def home_screen():
     """Render the home screen."""
     session.clear()
 
+    error = request.args.get('error', None)
+
     leaderboard = get_leaderboard()
 
     if request.method == 'POST':
@@ -337,7 +345,7 @@ def home_screen():
 
         return redirect(url_for('load_game_room'))
         
-    return render_template('index.html', leaderboard=leaderboard)
+    return render_template('index.html', leaderboard=leaderboard, error=error)
 
 @app.route('/start_single')
 def start_single_game():
@@ -363,10 +371,14 @@ def load_game_room():
     if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for('home_screen'))
     
-    if len(rooms[room]["participants"]) >= 2:
-        print("room full")
+    if len(rooms[room]["participants"]) >= 2 and mode == "multiplayer":
         # If there are already 2 players in the room, reject the new player's connection
-        return redirect(url_for('home_screen'))
+        return redirect(url_for('home_screen', error="Room is full."))
+
+    if len(rooms[room]["participants"]) >= 4 and mode == "battle-royale":
+        print("room full")
+        # If there are already 4 players in the room, reject the new player's connection
+        return redirect(url_for('home_screen', error="Room is full."))
 
     user_role = None
     if len(rooms[room]["participants"]) == 0 and mode == "multiplayer":
